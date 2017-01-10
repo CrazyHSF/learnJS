@@ -1000,4 +1000,3 @@ var newValue = window.oldValue;
 console.trace(newValue);
 //undefined
 
-    
