@@ -991,5 +991,13 @@ object.getName();
 (object.getName = object.getName)(); 
 
 object.getName=function(){
-    return console.trace()
+    return console.trace();
 }
+
+var newValue = oldValue;
+//error
+var newValue = window.oldValue;
+console.trace(newValue);
+//undefined
+
+    
