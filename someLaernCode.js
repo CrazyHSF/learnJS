@@ -1000,3 +1000,51 @@ var newValue = window.oldValue;
 console.trace(newValue);
 //undefined
 
+//可以这么写 但是不推荐使用 XXX毫秒之后 运行一次 只运行一次
+var timeoutId = setTimeout("console.trace('hello world')",1000);
+
+
+var timeoutId =  setTimeout(function(){
+    console.trace("1000毫秒过去了,hello world");
+},1000);
+
+//取消延时
+clearTimeout(timeoutId);
+
+setTimeout(function(){
+    console.trace("500毫秒之后,不想hello world了");
+    clearTimeout(timeoutId);
+},500);
+
+
+setTimeout(function(){
+    console.trace("1500毫秒之后,不想hello world了,可是已经helloworld了");
+    clearTimeout(timeoutId);
+},1500);
+
+//可以这么写 但是推荐使用 每隔XXX毫秒运行一次.持续运行
+var intervalId = setInterval("console.trace('hello world')",1000);
+
+var num=0;
+
+var intervalId = setInterval(function(){
+    num+=1;
+    console.trace(`1000毫秒过去了,我第${num}次说hello world`);
+},1000);
+
+setTimeout(function(){
+    console.trace("泥垢了,别说了");
+    clearInterval(intervalId);
+},4500);
+
+function incrementNumber() {
+    num+=1;
+//如果执行次数未达到max 设定的值，则设置另一次超时调用
+    if (num <= 10) {
+        console.trace(`1000毫秒过去了,我第${num}次说hello world`);
+        setTimeout(incrementNumber, 1000);
+    } else {
+        console.trace("泥垢了!")
+    }
+};
+incrementNumber();
