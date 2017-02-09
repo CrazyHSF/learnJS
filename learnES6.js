@@ -269,3 +269,29 @@ console.trace(a,b,c,d,e,len);
 let {toString: s} = 123;
 s === Number.prototype.toString // true
 console.trace(s);
+
+let {toString: s} = 123;
+s === Number.prototype.toString  // true
+
+let {toString: s} = true;
+s === Boolean.prototype.toString // true
+ //s在最后将被赋值为一个函数，
+
+let { value: x } = undefined; // TypeError
+let { value: y } = null; // TypeError
+//undefined 和 null并不能被转化为对象，最后将会报错。
+
+function add([x,y]){
+    return x*y;
+}
+
+function and({x,y}={}) {
+    return x*y;
+}
+
+function func({x,y=1,z}={}) {
+    return x/y+z;
+}
+console.trace(add([1,4]));
+console.trace(and({x:1,y:4}));
+console.trace(func({x:4,z:1}));
