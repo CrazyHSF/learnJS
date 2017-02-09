@@ -220,4 +220,52 @@ console.trace(x);
 let {hello,name}={hello:'hi! ',name:'Tom'}
 console.trace(hello+name);
 
-let {a,b,c,d,e}={a:'a',b:undefined,d:'d',e:c}
+let y="e";
+let {a,b,c,d="d",e=y}={a:'a',b:undefined,d:undefined,}
+console.trace(a);
+console.trace(b);
+console.trace(c);
+console.trace(d);
+console.trace(e);
+
+let {tag:x,flag:y}={flag:"flag",tag:"tag"}
+console.trace(x);
+console.trace(y);
+console.trace(tag);
+console.trace(flag);
+
+let foo;
+({foo} = {foo: 1}); 
+
+let baz;
+({bar: baz} = {bar: 1}); 
+
+console.trace(foo);
+console.trace(baz);
+
+let y
+let {flag:y}={flag:"flag"};
+console.trace(y);
+
+let {flag,value:{date:{x,y,tag:value}}}={flag:"falg",value:{date:{x:1,y:2,tag:"tag"}}}
+console.trace(flag,x,y,value);
+
+let {foo:{bar}}={flag:{baz:"baz"}}; //报错
+
+let x;
+{x} = {x: 1};      //错误,被解释为了代码块,
+
+let x;  
+({x} = {x: 1}); //正确,
+
+let arr = [1, 2, 3];
+let {0 : first, [arr.length - 1] : last} = arr;
+console.trace(first,last);
+
+let [a,b,c,d,e]="hello";
+let {length:len}="hello";
+console.trace(a,b,c,d,e,len);
+
+let {toString: s} = 123;
+s === Number.prototype.toString // true
+console.trace(s);
