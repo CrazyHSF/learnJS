@@ -202,10 +202,10 @@ console.trace(d); // undefined
 
 let [a='a', b='b', c='c' , d] = (new Set(null,'bb',undefined,'d'));
 
-console.trace(a);
-console.trace(b);
-console.trace(c);
-console.trace(d);
+console.trace(a); //a
+console.trace(b); //b
+console.trace(c); //c
+console.trace(d); //undefined
 
 function f() {
     console.trace('aaa');
@@ -295,3 +295,37 @@ function func({x,y=1,z}={}) {
 console.trace(add([1,4]));
 console.trace(and({x:1,y:4}));
 console.trace(func({x:4,z:1}));
+
+// String for...of
+for (let c of "hello world!"){
+    console.trace(c);
+}
+
+var text = String.fromCodePoint(0x20BB7);
+
+for (let i = 0; i < text.length; i++) {
+    console.trace(text[i]);
+}
+
+
+for (let i of text) {
+    console.trace(i);
+}
+
+var s = 'Hello world!';
+
+console.trace(
+s.startsWith('world'),
+s.endsWith('Hello'),
+s.includes('Hello'),
+s.startsWith('world', 6),
+s.endsWith('Hello', 5),
+s.includes('Hello', 6)
+);
+
+console.trace("hello".repeat(1));
+console.trace("hello world!".repeat(2));
+console.trace("hello \nworld! \n".repeat(2));
+console.trace("hello world!".repeat(2.2));
+console.trace("hello world!".repeat(-2));
+console.trace("hello world!".repeat(Infinity));
