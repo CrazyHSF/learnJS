@@ -374,5 +374,6 @@ function tag(s, v1, v2) {
 
 tag`Hello ${ a + b } world ${ a * b}`;
 
-String.raw`Hi\n${2+3}!`;
-String.raw({ raw: ['t','e','s','t'] }, 0, 1, 2);
+console.trace(String.raw`Hi\n${2+3}!`);
+console.trace(String.raw`hello \\\ world`);
+console.trace(String.raw({ raw: ['t','e','s','t'] }, 0, 1, 2));
