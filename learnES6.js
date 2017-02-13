@@ -325,8 +325,54 @@ s.includes('Hello', 6)
 
 console.trace("hello".repeat(1));
 console.trace("hello world!".repeat(2));
-console.trace("hello \nworld! \n".repeat(2));
+console.trace("hello \n world! \n".repeat(2));
 console.trace("hello world!".repeat(2.2));
 console.trace("hello world!".repeat(-2));
 console.trace("hello world!".repeat(Infinity));
 
+var world="world";
+var templetObj={hello:"say hi",to:"to you"};
+console.trace(`hello world!`);
+console.trace(`\`,\\,\\\`,\t,\n,\s`);
+console.trace(`\`,\\,\\\`,\t,\n,\s`);
+console.trace(`hello ${world}`);
+console.trace(`${3+44}+${3+2}=${3+44+3+2} \n${1===1} \n${templetObj.hello} ${templetObj.to}`);
+console.trace(`${templetObj.sayhello}`);
+console.trace(`print out \n\t${console.trace(`print from inside\n\t${console.trace(`inside!`)}`)}`);
+console.trace(`hello this is a fuunction\n${function(){return "print from function"}()}`);
+
+// 写法一
+let str = 'return ' + '`Hello ${name}!`';
+let func = new Function('name', str);
+func('Jack') ;
+
+// 写法二
+let str = '(name) => `Hello ${name}!`';
+let func = eval.call(null, str);
+func('Jack') ;
+
+console.trace`hello world!`;
+console.trace("hello world!");
+function consoletrace (str) {
+    console.trace(str);
+}
+consoletrace`hello world!`;
+consoletrace("hello world");
+
+var a = 5;
+var b = 10;
+
+function tag(s, v1, v2) {
+    console.log(s[0]);
+    console.log(s[1]);
+    console.log(s[2]);
+    console.log(v1);
+    console.log(v2);
+
+    return "OK";
+}
+
+tag`Hello ${ a + b } world ${ a * b}`;
+
+String.raw`Hi\n${2+3}!`;
+String.raw({ raw: ['t','e','s','t'] }, 0, 1, 2);
