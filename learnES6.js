@@ -374,6 +374,15 @@ function tag(s, v1, v2) {
 
 tag`Hello ${ a + b } world ${ a * b}`;
 
-console.trace(String.raw`Hi\n${2+3}!`);
-console.trace(String.raw`hello \\\ world`);
+console.trace(String.raw`Hi\n${2+3}!`); //不会输出换行符 而是直接输出\n
+console.trace(`Hi\n${2+3}`);
+console.trace(String.raw`hello \\ world`);
+console.trace(`hello \\ world`);
 console.trace(String.raw({ raw: ['t','e','s','t'] }, 0, 1, 2));
+
+var regex = new RegExp(/xyz/, 'i');
+var reg=new RegExp(/^[\w\W]+$/,"ig");
+console.trace(regex.test("xyz"));
+console.trace(reg.test("1234123asd"));
+console.trace(regex.flags);
+console.trace(reg.flags);
