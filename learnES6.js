@@ -386,3 +386,32 @@ console.trace(regex.test("xyz"));
 console.trace(reg.test("1234123asd"));
 console.trace(regex.flags);
 console.trace(reg.flags);
+
+console.trace(/^\uD83D/u.test('\uD83D\uDC2A'));
+
+console.trace(/^\uD83D/.test('\uD83D\uDC2A'));
+
+console.trace(/\u{61}/.test('a'));
+console.trace(/\u{61}/u.test('a'));
+console.trace(/\u{20BB7}/u.test('𠮷'));
+console.trace(/a{2}/.test('aa'));
+console.trace(/a{2}/u.test('aa'));
+console.trace(/𠮷{2}/.test('𠮷𠮷'));
+console.trace(/𠮷{2}/u.test('𠮷𠮷'));
+console.trace(/^\S$/.test('𠮷'));
+console.trace(/^\S$/u.test('𠮷'));
+
+var s = 'aaa_aa_a';
+var r1 = /a+/g;
+var r2 = /a+/y;
+
+console.trace(r1.exec(s));
+console.trace(r2.exec(s));
+
+console.trace(r1.exec(s));
+console.trace(r2.exec(s));
+
+var s = 'aaa_aa_a';
+var r = /a+_/y;
+console.trace(r.exec(s));
+console.trace(r.exec(s));
