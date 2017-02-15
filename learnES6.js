@@ -415,3 +415,11 @@ var s = 'aaa_aa_a';
 var r = /a+_/y;
 console.trace(r.exec(s));
 console.trace(r.exec(s));
+
+const REGEX = /a+_/g;
+REGEX.lastIndex = 2;
+const match = REGEX.exec('aaa_aa_a');
+console.trace(match);
+console.trace(match.index);
+console.trace(REGEX.lastIndex);
+console.trace(REGEX.exec('aaaa_'));
