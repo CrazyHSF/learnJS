@@ -423,3 +423,48 @@ console.trace(match);
 console.trace(match.index);
 console.trace(REGEX.lastIndex);
 console.trace(REGEX.exec('aaaa_'));
+
+console.trace(0b1000000000===1024);
+console.trace(0o767===503);
+console.trace(Number(0b1000000000));
+console.trace(Number(0o767));
+
+
+console.trace(Number.isFinite(15)); // true
+console.trace(Number.isFinite(0.8)); // true
+console.trace(Number.isFinite(NaN)); // false
+console.trace(Number.isFinite(Infinity)); // false
+console.trace(Number.isFinite(-Infinity)); // false
+console.trace(Number.isFinite('foo')); // false
+console.trace(Number.isFinite('15')); // false
+console.trace(Number.isFinite(true)); // false
+
+console.trace(Number.isNaN(NaN));// true
+console.trace(Number.isNaN(15));// false
+console.trace(Number.isNaN('15')); // false
+console.trace(Number.isNaN(true)); // false
+console.trace(Number.isNaN(9/NaN));// true
+console.trace(Number.isNaN('true'/0)); // true
+console.trace(Number.isNaN('true'/'true')); // true
+
+// ES5的写法
+console.trace(parseInt('12.34'));// 12
+console.trace(parseFloat('123.45#')); // 123.45
+
+// ES6的写法
+console.trace(Number.parseInt('12.34')); // 12
+console.trace(Number.parseFloat('123.45#')); // 123.45
+
+//两个标准中的方法对比
+console.trace(Number.parseInt===parseInt); //true
+console.trace(Number.parseFloat===parseFloat); //true
+
+console.trace(Number.isInteger(25));// true
+console.trace(Number.isInteger(25.0));// true
+console.trace(Number.isInteger(25.1)); // false
+console.trace(Number.isInteger("15"));// false
+console.trace(Number.isInteger(true));// false
+
+console.trace(Number.EPSILON);
+console.trace(Number.EPSILON.toFixed(20));
+console.trace(5.551115123125783e-17.toFixed(20));
