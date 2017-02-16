@@ -374,53 +374,52 @@ function tag(s, v1, v2) {
 
 tag`Hello ${ a + b } world ${ a * b}`;
 
-console.trace(String.raw`Hi\n${2+3}!`);
-console.trace(String.raw`hello \\\ world`);
+console.trace(String.raw`Hi\n${2+3}!`); //不会输出换行符 而是直接输出\n
+console.trace(`Hi\n${2+3}`);
+console.trace(String.raw`hello \\ world`);
+console.trace(`hello \\ world`);
 console.trace(String.raw({ raw: ['t','e','s','t'] }, 0, 1, 2));
-console.trace(String.raw({ raw: 'test' }, 0, 1, 2));
 
-console.trace(0b1000000000===1024);
-console.trace(0o767===503);
-console.trace(Number(0b1000000000));
-console.trace(Number(0o767));
+var regex = new RegExp(/xyz/, 'i');
+var reg=new RegExp(/^[\w\W]+$/,"ig");
+console.trace(regex.test("xyz"));
+console.trace(reg.test("1234123asd"));
+console.trace(regex.flags);
+console.trace(reg.flags);
 
+console.trace(/^\uD83D/u.test('\uD83D\uDC2A'));
 
-console.trace(Number.isFinite(15)); // true
-console.trace(Number.isFinite(0.8)); // true
-console.trace(Number.isFinite(NaN)); // false
-console.trace(Number.isFinite(Infinity)); // false
-console.trace(Number.isFinite(-Infinity)); // false
-console.trace(Number.isFinite('foo')); // false
-console.trace(Number.isFinite('15')); // false
-console.trace(Number.isFinite(true)); // false
+console.trace(/^\uD83D/.test('\uD83D\uDC2A'));
 
-console.trace(Number.isNaN(NaN));// true
-console.trace(Number.isNaN(15));// false
-console.trace(Number.isNaN('15')); // false
-console.trace(Number.isNaN(true)); // false
-console.trace(Number.isNaN(9/NaN));// true
-console.trace(Number.isNaN('true'/0)); // true
-console.trace(Number.isNaN('true'/'true')); // true
+console.trace(/\u{61}/.test('a'));
+console.trace(/\u{61}/u.test('a'));
+console.trace(/\u{20BB7}/u.test('𠮷'));
+console.trace(/a{2}/.test('aa'));
+console.trace(/a{2}/u.test('aa'));
+console.trace(/𠮷{2}/.test('𠮷𠮷'));
+console.trace(/𠮷{2}/u.test('𠮷𠮷'));
+console.trace(/^\S$/.test('𠮷'));
+console.trace(/^\S$/u.test('𠮷'));
 
-// ES5的写法
-console.trace(parseInt('12.34'));// 12
-console.trace(parseFloat('123.45#')); // 123.45
+var s = 'aaa_aa_a';
+var r1 = /a+/g;
+var r2 = /a+/y;
 
-// ES6的写法
-console.trace(Number.parseInt('12.34')); // 12
-console.trace(Number.parseFloat('123.45#')); // 123.45
+console.trace(r1.exec(s));
+console.trace(r2.exec(s));
 
-//两个标准中的方法对比
-console.trace(Number.parseInt===parseInt); //true
-console.trace(Number.parseFloat===parseFloat); //true
+console.trace(r1.exec(s));
+console.trace(r2.exec(s));
 
-console.trace(Number.isInteger(25));// true
-console.trace(Number.isInteger(25.0));// true
-console.trace(Number.isInteger(25.1)); // false
-console.trace(Number.isInteger("15"));// false
-console.trace(Number.isInteger(true));// false
+var s = 'aaa_aa_a';
+var r = /a+_/y;
+console.trace(r.exec(s));
+console.trace(r.exec(s));
 
-console.trace(Number.EPSILON);
-console.trace(Number.EPSILON.toFixed(20));
-console.trace(5.551115123125783e-17.toFixed(20));
-
+const REGEX = /a+_/g;
+REGEX.lastIndex = 2;
+const match = REGEX.exec('aaa_aa_a');
+console.trace(match);
+console.trace(match.index);
+console.trace(REGEX.lastIndex);
+console.trace(REGEX.exec('aaaa_'));
