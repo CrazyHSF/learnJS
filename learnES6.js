@@ -424,6 +424,12 @@ console.trace(match.index);
 console.trace(REGEX.lastIndex);
 console.trace(REGEX.exec('aaaa_'));
 
+var r = /hello\d/y;
+console.trace(r.sticky);
+var x = /hello\d/;
+console.trace(x.sticky);
+
+
 console.trace(0b1000000000===1024);
 console.trace(0o767===503);
 console.trace(Number(0b1000000000));
@@ -468,3 +474,32 @@ console.trace(Number.isInteger(true));// false
 console.trace(Number.EPSILON);
 console.trace(Number.EPSILON.toFixed(20));
 console.trace(5.551115123125783e-17.toFixed(20));
+
+console.trace(Number.MAX_SAFE_INTEGER === Math.pow(2, 53) - 1); //true
+console.trace(Number.MAX_SAFE_INTEGER === 9007199254740991) //true
+console.trace(Number.MIN_SAFE_INTEGER === -Number.MAX_SAFE_INTEGER)//true
+console.trace(Number.MIN_SAFE_INTEGER === -9007199254740991)//true
+
+console.trace(Number.isSafeInteger('a')); // false
+console.trace(Number.isSafeInteger(null)); // false
+console.trace(Number.isSafeInteger(NaN));// false
+console.trace(Number.isSafeInteger(Infinity)); // false
+console.trace(Number.isSafeInteger(-Infinity)); // false
+
+console.trace(Number.isSafeInteger(3)); // true
+console.trace(Number.isSafeInteger(1.2)); // false
+console.trace(Number.isSafeInteger(9007199254740990)); // true
+console.trace(Number.isSafeInteger(9007199254740992)); // false
+
+console.trace(Number.isSafeInteger(Number.MIN_SAFE_INTEGER - 1)); // false
+console.trace(Number.isSafeInteger(Number.MIN_SAFE_INTEGER)); // true
+console.trace(Number.isSafeInteger(Number.MAX_SAFE_INTEGER)); // true
+console.trace(Number.isSafeInteger(Number.MAX_SAFE_INTEGER + 1)); // false
+
+console.trace(Number.isSafeInteger(9007199254740993));// false
+console.trace(Number.isSafeInteger(990));// true
+console.trace(Number.isSafeInteger(9007199254740993 - 990));//true
+console.trace(9007199254740993 - 990);
+// 返回结果 9007199254740002
+// 正确答案应该是 9007199254740003
+console.trace(9007199254740993 === 9007199254740992);
