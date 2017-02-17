@@ -503,3 +503,60 @@ console.trace(9007199254740993 - 990);
 // 返回结果 9007199254740002
 // 正确答案应该是 9007199254740003
 console.trace(9007199254740993 === 9007199254740992);
+
+
+console.trace(Math.trunc(2.3));
+console.trace(Math.trunc(2.9));
+console.trace(Math.trunc(-2.3));
+console.trace(Math.trunc(-2.8));
+console.trace(Math.trunc('2.3'));//2
+console.trace(Math.trunc('-2.3'));//-2
+console.trace(Math.trunc(NaN));
+console.trace(Math.trunc('foo'));
+console.trace(Math.trunc(null));
+console.trace(Math.trunc(undefined));
+console.trace(Math.trunc());
+
+console.trace(Math.sign(-9.889));
+console.trace(Math.sign(-0));
+console.trace(Math.sign(+0));
+console.trace(Math.sign(+3.898));
+console.trace(Math.sign('-2.36'));
+console.trace(Math.sign('+2.389'));
+console.trace(Math.sign(NaN));
+console.trace(Math.sign('foo'));
+console.trace(Math.sign());
+console.trace(Math.sign(null));
+console.trace(Math.sign(undefined));
+
+console.trace(Math.cbrt(-1));
+console.trace(Math.cbrt(0));
+console.trace(Math.cbrt(1));
+console.trace(Math.cbrt(2));
+console.trace(Math.cbrt('-1'));
+console.trace(Math.cbrt('+1'));
+console.trace(Math.cbrt('foo'));
+console.trace(Math.cbrt(NaN));
+console.trace(Math.cbrt());
+console.trace(Math.cbrt(null));
+console.trace(Math.cbrt(undefined));
+
+console.trace(Math.clz32(0));
+console.trace(Math.clz32(1));
+console.trace(Math.clz32(1000)); //默认其为十进制数 运行的时候转化为二进制之后在继续函数
+console.trace(Math.clz32(0b01000000000000000000000000000000));
+console.trace(Math.clz32(0b00100000000000000000000000000000));
+console.trace(Math.clz32()); // 32
+console.trace(Math.clz32(NaN));// 32
+console.trace(Math.clz32(Infinity)); // 32
+console.trace(Math.clz32(null));// 32
+console.trace(Math.clz32('foo')); // 32
+console.trace(Math.clz32([]));// 32
+console.trace(Math.clz32({})); // 32
+console.trace(Math.clz32(true));// 31
+console.trace(Math.clz32(1<<1));
+console.trace(Math.clz32(1<<2));
+console.trace(Math.clz32(1<<29));
+console.trace(Math.clz32(2.3));
+console.trace(Math.clz32(3.9));
+
