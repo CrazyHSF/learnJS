@@ -560,3 +560,61 @@ console.trace(Math.clz32(1<<29));
 console.trace(Math.clz32(2.3));
 console.trace(Math.clz32(3.9));
 
+console.trace(Math.imul(2,4));
+console.trace(Math.imul(-1,8));
+console.trace(Math.imul(-2,-2));
+
+sonsole.trace(0x7fffffff * 0x7fffffff);//0
+console.trace(Math.imul(0x7fffffff * 0x7fffffff));//1
+
+console.trace(Math.fround(0));     // 0
+console.trace(Math.fround(1));     // 1
+console.trace(Math.fround(1.337)); // 1.3370000123977661
+console.trace(Math.fround(2.1579)); // 2.157900094985962
+console.trace(Math.fround(3.157852)); // 3.1578519344329834
+console.trace(Math.fround(1.5));   // 1.5
+console.trace(Math.fround(NaN));   // NaN
+
+console.trace(Math.hypot(3, 4)); // 5
+console.trace(Math.hypot(3, 4, 5);     // 7.0710678118654755
+console.trace(Math.hypot());            // 0
+console.trace(Math.hypot(NaN));         // NaN
+console.trace(Math.hypot(3, 4, 'foo')); // NaN
+console.trace(Math.hypot(3, 4, '5'));   // 7.0710678118654755
+console.trace(Math.hypot(-3));          // 3
+
+console.trace(Math.expm1(-1)); // -0.6321205588285577
+console.trace(Math.expm1(0));  // 0
+console.trace(Math.expm1(1));  // 1.718281828459045))
+
+console.trace(Math.log1p(1));
+console.trace(Math.log1p(0));
+console.trace(Math.log1p(-1));
+console.trace(Math.log1p(-2));
+
+console.trace(Math.log10(2));
+console.trace(Math.log10(1));
+console.trace(Math.log10(0));
+console.trace(Math.log10(-2));
+console.trace(math.log10(10));
+
+console.trace(Math.log2(2));
+console.trace(Math.log2(1));
+console.trace(Math.log2(0));
+console.trace(Math.log2(-2));
+console.trace(Math.log2(1024));
+
+console.trace(Math.signbit(2));//false
+console.trace(Math.signbit(-2)); //true
+console.trace(Math.signbit(0)); //false
+console.trace(Math.signbit(-0)); //true
+
+console.trace(2**2);
+console.trace(1**1);
+let a=2**2;
+console.trace(a);
+let b=3;
+b**=b;
+console.trace(b);
+
+
