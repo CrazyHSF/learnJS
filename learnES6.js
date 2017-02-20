@@ -564,7 +564,7 @@ console.trace(Math.imul(2,4));
 console.trace(Math.imul(-1,8));
 console.trace(Math.imul(-2,-2));
 
-sonsole.trace(0x7fffffff * 0x7fffffff);//0
+console.trace(0x7fffffff * 0x7fffffff);//0
 console.trace(Math.imul(0x7fffffff * 0x7fffffff));//1
 
 console.trace(Math.fround(0));     // 0
@@ -576,7 +576,7 @@ console.trace(Math.fround(1.5));   // 1.5
 console.trace(Math.fround(NaN));   // NaN
 
 console.trace(Math.hypot(3, 4)); // 5
-console.trace(Math.hypot(3, 4, 5);     // 7.0710678118654755
+console.trace(Math.hypot(3, 4, 5));     // 7.0710678118654755
 console.trace(Math.hypot());            // 0
 console.trace(Math.hypot(NaN));         // NaN
 console.trace(Math.hypot(3, 4, 'foo')); // NaN
@@ -596,18 +596,13 @@ console.trace(Math.log10(2));
 console.trace(Math.log10(1));
 console.trace(Math.log10(0));
 console.trace(Math.log10(-2));
-console.trace(math.log10(10));
+console.trace(Math.log10(10));
 
 console.trace(Math.log2(2));
 console.trace(Math.log2(1));
 console.trace(Math.log2(0));
 console.trace(Math.log2(-2));
 console.trace(Math.log2(1024));
-
-console.trace(Math.signbit(2));//false
-console.trace(Math.signbit(-2)); //true
-console.trace(Math.signbit(0)); //false
-console.trace(Math.signbit(-0)); //true
 
 console.trace(2**2);
 console.trace(1**1);
@@ -617,4 +612,103 @@ let b=3;
 b**=b;
 console.trace(b);
 
+console.trace(Math.pow(99, 99));
+// 3.697296376497263e+197
 
+console.trace(99 ** 99);
+// 3.697296376497268e+197
+
+var arrayLike = {
+    '0': 'a',
+    '1': 'b',
+    '2': 'c',
+    length: 3
+};
+
+var tempMap = new Map();
+var tempSet = new Set();
+
+tempMap.set('0','a');
+tempMap.set('1','b');
+tempMap.set('2','c');
+tempSet.add('a');
+tempSet.add('b');
+tempSet.add('c');
+
+
+// ES5的写法
+var arr1 = [].slice.call(arrayLike); // ['a', 'b', 'c']
+var arr2 = [].slice.call(tempMap); // ['a', 'b', 'c']
+var arr3 = [].slice.call(tempSet); // ['a', 'b', 'c']
+console.trace(arr1);
+console.trace(arr2);
+console.trace(arr3);
+// ES6的写法
+let arr4 = Array.from(arrayLike); // ['a', 'b', 'c']
+let arr5 = Array.from(tempMap); // ['a', 'b', 'c']
+let arr6 = Array.from(tempSet); // ['a', 'b', 'c']
+console.trace(arr4);
+console.trace(arr5);
+console.trace(arr6);
+
+// arguments对象
+function foo() {
+    var args = Array.from(arguments);
+    console.trace(args);
+}
+
+foo(1,2,3,4,5,6,7,8,9,0);
+
+console.trace(Array.from('hello world!'));
+console.trace(Array.from({length:3}));
+console.trace(Array.from([1,2,3,4]));
+
+console.trace(Array.from([2,4,6], x => x * x));
+// 等同于
+console.trace(Array.from([1,2,3,4,]).map(x => x * x));
+
+console.trace(Array.from([1, 2, 3], (x) => x * x));
+
+function countSymbols(string) {
+    return Array.from(string).length;
+}
+
+console.trace(countSymbols('hello world!'));
+
+
+
+console.trace(Array()); // []
+console.trace(Array(3)); // [, , ,]
+console.trace(Array(3, 11, 8)); // [3, 11, 8]
+
+console.trace(Array.of(3, 11, 8)); // [3,11,8]
+console.trace(Array.of(3)); // [3]
+console.trace(Array.of(3).length);// 1
+
+console.trace([1,2,3,4,5,6,7,8].copyWithin(0,2));
+console.trace([1,2,3,4,5,6,7,8].copyWithin(2.5));
+console.trace([1,2,3,4,5,6,7,8].copyWithin(0,2,5));
+console.trace([1,2,3,4,5,6,7,8].copyWithin(0,5,2));
+console.trace([1,2,3,4,5,6,7,8].copyWithin(5,1,2));
+
+// 将3号位复制到0号位
+console.trace([1, 2, 3, 4, 5].copyWithin(0, 3, 4));
+// [4, 2, 3, 4, 5]
+
+// -2相当于3号位，-1相当于4号位
+console.trace([1, 2, 3, 4, 5].copyWithin(0, -2, -1));
+// [4, 2, 3, 4, 5]
+
+// 将3号位复制到0号位
+console.trace([].copyWithin.call({length: 5, 3: 1}, 0, 3));
+// {0: 1, 3: 1, length: 5}
+
+// 将2号位到数组结束，复制到0号位
+var i32a = new Int32Array([1, 2, 3, 4, 5]);
+console.trace(i32a.copyWithin(0, 2));
+// Int32Array [3, 4, 5, 4, 5]
+
+// 对于没有部署TypedArray的copyWithin方法的平台
+// 需要采用下面的写法
+console.trace([].copyWithin.call(new Int32Array([1, 2, 3, 4, 5]), 0, 3, 4));
+// Int32Array [4, 2, 3, 4, 5]
