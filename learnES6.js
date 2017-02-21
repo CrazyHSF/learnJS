@@ -712,3 +712,94 @@ console.trace(i32a.copyWithin(0, 2));
 // 需要采用下面的写法
 console.trace([].copyWithin.call(new Int32Array([1, 2, 3, 4, 5]), 0, 3, 4));
 // Int32Array [4, 2, 3, 4, 5]
+
+console.trace([1,2,3,4,5,6].find((x)=>x>4));
+console.trace([1,2,3,4,5,6].find((x)=>x>6));
+console.trace([1,2,3,4,5,6].find((value,index,arra)=>value>4));
+console.trace([1,2,3,4,5,6].find((value,index,arra)=>value>6));
+console.trace([1,2,3,4,5,6].findIndex((x)=>x>4));
+console.trace([1,2,3,4,5,6].findIndex((x)=>x>6));
+console.trace([1,2,3,4,5,6].findIndex((value,index,arr)=>value>4));
+console.trace([1,2,3,4,5,6].findIndex((value,index,arr)=>value>6));
+
+console.trace([NaN].indexOf(NaN));
+// -1
+console.trace([NaN].findIndex(y => Object.is(NaN, y)));
+// 0
+console.trace(new Array(5).fill(1));
+console.trace(Array.from([1,2,3,4,5,6]).fill(2));
+console.trace(Array.from([1,2,3,4,5,6]).fill(3,2,4));
+console.trace(Array.from([1,2,3,4,5,6]).fill(3,2));
+
+for(let [index,value] of [1,2,3,4,5,6,7].entries()){
+    console.trace(index+':'+value+"\n");
+}
+
+for(let x of [1,2,3,4,5,6,7].keys()){
+    if(x>2) {
+        console.trace(x);
+    }
+}
+
+for(let y of [1,2,3,4,5,6,7].values()){
+    if(y>2) {
+        console.trace(y);
+    }
+}
+
+let letter = ['a', 'b', 'c'];
+let entries = letter.entries();
+let keys = letter.keys();
+let values = letter.values();
+console.trace(entries.next().index);
+console.trace(entries.next().value);
+console.trace(entries.next().index);
+console.trace(entries.next().value);
+console.trace(entries.next().index);
+console.trace(entries.next().value);
+
+console.trace(keys.next());
+console.trace(keys.next());
+console.trace(keys.next());
+
+console.trace(values.next());
+console.trace(values.next());
+console.trace(values.next());
+
+function saySomething (x,y){
+    y=y||"world";
+    console.trace(x+"\t"+y);
+}
+saySomething("hello");
+saySomething("hello","Tom");
+
+function saySomething(x,y){
+    if(y !== undefined){
+        console.trace(x+"\t"+y);
+    }else{
+        console.trace(x+"\tworld");
+    }
+}
+saySomething("hello");
+saySomething("hello","Tom");
+
+function saySomething (x,y='world'){
+    console.trace(x+"\t"+y);
+}
+saySomething("hello");
+saySomething("hello","Tom");
+
+function point(x=0,y=0){
+    this.x=x;
+    this.y=y;
+}
+let p1= new point();
+let p2= new point(2,3);
+console.trace(p1.x,p1.y);
+console.trace(p2.x,p2.y);
+
+function point(x=0,y=0){ //error
+    let x;
+    let y;
+}
+
