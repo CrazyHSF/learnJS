@@ -803,3 +803,59 @@ function point(x=0,y=0){ //error
     let y;
 }
 
+function add({x,y=3}){
+    console.trace(x+y);
+}
+
+add(1,2);
+add(1);
+add({});
+add({x:1,y:2});
+add({x:1});
+add();
+
+function fetch(url, { body = '', method = 'GET', headers = {} }) {
+    console.trace(method);
+}
+
+fetch('http://example.com', {})
+// "GET"
+
+fetch('http://example.com')
+// error
+
+function fetch(url, { method = 'GET' } = {}) {
+    console.trace(method);
+}
+
+fetch('http://example.com')
+// "GET"
+
+// 写法一
+function m1({x = 0, y = 0} = {}) {
+    console.trace("["+x+","+ y+"]");
+}
+
+// 写法二
+function m2({x, y} = { x: 0, y: 0 }) {
+    console.trace("["+x+","+ y+"]");
+}
+
+// 函数没有参数的情况
+m1() // [0, 0]
+m2() // [0, 0]
+
+// x和y都有值的情况
+m1({x: 3, y: 8}) // [3, 8]
+m2({x: 3, y: 8}) // [3, 8]
+
+// x有值，y无值的情况
+m1({x: 3}) // [3, 0]
+m2({x: 3}) // [3, undefined]
+
+// x和y都无值的情况
+m1({}) // [0, 0];
+m2({}) // [undefined, undefined]
+
+m1({z: 3}) // [0, 0]
+m2({z: 3}) // [undefined, undefined]
