@@ -859,3 +859,89 @@ m2({}) // [undefined, undefined]
 
 m1({z: 3}) // [0, 0]
 m2({z: 3}) // [undefined, undefined]
+
+function func(x=1,y,z) {
+    console.trace(x+y+z);
+}
+func(1,2,3);
+func(,2,3);
+func(undefined,2,3);
+func(1,,3);
+func(1,undefined,3);
+func(1,2,);
+func(1,2,undefined);
+func();
+
+function func(x,y=1,z){
+    console.trace(x+y+z);
+}
+func(1,2,3);
+func(,2,3);
+func(undefined,2,3);
+func(1,,3);
+func(1,undefined,3);
+func(1,2,);
+func(1,2,undefined);
+func();
+
+function func(x,y,z=1){
+    console.trace(x+y+z);
+}
+func(1,2,3);
+func(,2,3); //error
+func(undefined,2,3);
+func(1,,3);//error
+func(1,undefined,3);
+func(1,2,); //error
+func(1,2,undefined);
+func();
+
+function func(x,y,z=1){
+
+}
+console.trace(func.length);
+
+function func(x,y=1,z=2){
+}
+console.trace(func.length);
+
+function func(x=1,y,z){
+}
+console.trace(func.length);
+
+function func(x=1,y=3,z){
+}
+console.trace(func.length);
+
+var x = 1;
+
+function f(x, y = x) {
+    console.log(y);
+}
+
+f(2) // 2
+
+let x = 1;
+
+function f(y = x) {
+    let x = 2;
+    console.log(y);
+}
+
+f() // 1
+
+//默认值在调用前必须先声明
+function f(y = x) {
+    let x = 2;
+    console.log(y);
+}
+
+f() // ReferenceError: x is not defined
+
+var x = 1;
+//依旧报错
+function foo(x = x) {
+    // ...
+}
+
+foo() // ReferenceError: x is not defined
