@@ -864,11 +864,11 @@ function func(x=1,y,z) {
     console.trace(x+y+z);
 }
 func(1,2,3);
-func(,2,3);
+func(,2,3); //error
 func(undefined,2,3);
-func(1,,3);
+func(1,,3); //error
 func(1,undefined,3);
-func(1,2,);
+func(1,2,); //error
 func(1,2,undefined);
 func();
 
@@ -876,11 +876,11 @@ function func(x,y=1,z){
     console.trace(x+y+z);
 }
 func(1,2,3);
-func(,2,3);
+func(,2,3);//error
 func(undefined,2,3);
-func(1,,3);
+func(1,,3); //error
 func(1,undefined,3);
-func(1,2,);
+func(1,2,); //error
 func(1,2,undefined);
 func();
 
@@ -893,11 +893,11 @@ func(undefined,2,3);
 func(1,,3);//error
 func(1,undefined,3);
 func(1,2,); //error
-func(1,2,undefined);
+func(1,2); // 4
+func(1,2,undefined);// 4
 func();
 
 function func(x,y,z=1){
-
 }
 console.trace(func.length);
 
@@ -946,3 +946,38 @@ function foo(x = x) {
 
 foo() // ReferenceError: x is not defined
 
+let foo = 'outer';
+
+function bar(func = x => foo) {
+    let foo = 'inner';
+    console.log(func()); // outer
+}
+
+bar();
+
+function bar(func = () => foo) {
+    let foo = 'inner';
+    console.log(func());
+}
+
+bar() // ReferenceError: foo is not defined
+
+var x = 1;
+function foo(x, y = function() { x = 2; }) {
+    var x = 3;
+    y();
+    console.log(x);
+}
+
+foo() // 3
+x // 1
+
+var x = 1;
+function foo(x, y = function() { x = 2; }) {
+    x = 3;
+    y();
+    console.log(x);
+}
+
+foo() // 2
+x // 1
