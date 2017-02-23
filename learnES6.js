@@ -945,3 +945,4 @@ function foo(x = x) {
 }
 
 foo() // ReferenceError: x is not defined
+
