@@ -981,3 +981,55 @@ function foo(x, y = function() { x = 2; }) {
 
 foo() // 2
 x // 1
+
+function throwIfMissing() {
+    throw new Error('Missing parameter');
+}
+
+function foo(mustBeProvided = throwIfMissing()) {
+    return mustBeProvided;
+}
+
+foo() // Error: Missing parameter
+
+
+function add(...values) {
+    let sum = 0;
+
+    for (var val of values) {
+        sum += val;
+    }
+
+    return sum;
+}
+
+console.trace(add(2, 5, 3));// 10
+
+function strCat(...str){
+    var retStr="";
+    for(var tempStr of str){
+        retStr=retStr+tempStr
+    }
+    return retStr;
+}
+console.trace(strCat("hello"," ","world","!!!"));
+
+function push(array, ...items) {
+    items.forEach(function(item) {
+        array.push(item);
+    });
+}
+
+var a = [];
+push(a, 1, 2, 3)
+console.trace(a);
+
+console.trace((function(a) {}).length); // 1
+console.trace((function(...a) {}).length); // 0
+console.trace((function(a, ...b) {}).length);  // 1
+
+console.trace(...[1, 2, 3]);
+// 1 2 3
+
+console.trace(1, ...[2, 3, 4], 5);
+// 1 2 3 4 5
