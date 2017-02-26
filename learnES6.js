@@ -913,6 +913,10 @@ function func(x=1,y=3,z){
 }
 console.trace(func.length);
 
+function func(x,y=1,z) {
+}
+console.trace(func.length);
+
 var x = 1;
 
 function f(x, y = x) {
@@ -1033,3 +1037,96 @@ console.trace(...[1, 2, 3]);
 
 console.trace(1, ...[2, 3, 4], 5);
 // 1 2 3 4 5
+
+function f(v, w, x, y, z) { }
+var args = [0, 1];
+f(-1, ...args, 2, ...[3]);
+
+//由于JavaScript不提供求数组最大元素的函数，所以只能套用Math.max函数，将数组转为一个参数序列，然后求最大值。
+
+// ES5的写法
+function f(x, y, z) {
+    // ...
+}
+var args = [0, 1, 2];
+f.apply(null, args);
+
+// ES6的写法
+function f(x, y, z) {
+    // ...
+}
+var args = [0, 1, 2];
+f(...args);
+
+// ES5的写法
+Math.max.apply(null, [14, 3, 77])
+
+// ES6的写法
+Math.max(...[14, 3, 77])
+
+// 等同于
+Math.max(14, 3, 77);
+
+// ES5的写法
+var arr1 = [0, 1, 2];
+var arr2 = [3, 4, 5];
+Array.prototype.push.apply(arr1, arr2);
+
+// ES6的写法
+var arr1 = [0, 1, 2];
+var arr2 = [3, 4, 5];
+arr1.push(...arr2);
+
+// ES5
+new (Date.bind.apply(Date, [null, 2015, 1, 1]))
+// ES6
+new Date(...[2015, 1, 1]);
+
+[...arr1, ...arr2, ...arr3]
+var newArray=[...[1,2,3],...[4,5,6],...[7,8,9]];
+console.trace(newArray); //[1,2,3,4,5,6,7,8,9]
+
+[a,...more]=newArray;
+console.trace(a,more);
+
+const [first, ...rest] = [1, 2, 3, 4, 5];
+first // 1
+rest  // [2, 3, 4, 5]
+
+const [first, ...rest] = [];
+first // undefined
+rest  // []:
+
+const [first, ...rest] = ["foo"];
+first  // "foo"
+rest   // []
+
+const [...butLast, last] = [1, 2, 3, 4, 5];
+// 报错
+
+const [first, ...middle, last] = [1, 2, 3, 4, 5];
+// 报错
+
+console.trace([...'hello']);
+
+let map = new Map([
+    [1, 'one'],
+    [2, 'two'],
+    [3, 'three'],
+]);
+
+let arr = [...map.keys()]; // [1, 2, 3]
+console.trace(arr);
+
+
+var go = function*(){
+    yield 1;
+    yield 2;
+    yield 3;
+};
+
+[...go()] // [1, 2, 3]
+
+//
+var obj = {a: 1, b: 2}; //没有iterator接口的对象
+let arr = [...obj]; // TypeError: Cannot spread non-iterable object
