@@ -1130,3 +1130,103 @@ var go = function*(){
 //
 var obj = {a: 1, b: 2}; //没有iterator接口的对象
 let arr = [...obj]; // TypeError: Cannot spread non-iterable object
+
+//ES6规定
+//只要函数参数使用了默认值、解构赋值、或者扩展运算符，那么函数内部就不能显式设定为严格模式，否则会报错。
+// 报错
+function doSomething(a, b = a) {
+    'use strict';
+    // code
+}
+
+// 报错
+const doSomething = function ({a, b}) {
+    'use strict';
+    // code
+};
+
+// 报错
+const doSomething = (...a) => {
+    'use strict';
+    // code
+};
+
+const obj = {
+    // 报错
+    doSomething({a, b}) {
+        'use strict';
+        // code
+    }
+};
+
+
+'use strict';
+
+function doSomething(a, b = a) {
+    // code
+}
+
+const doSomething = (function () {
+    'use strict';
+    return function(value = 42) {
+        return value;
+    };
+}());
+
+function theName() {
+    
+}
+console.trace(theName.name);
+
+var theName=function(){
+
+}
+console.trace(theName.name);
+
+var theName=function anotherName(){
+
+}
+console.trace(theName.name);
+
+console.trace((new Function).name);// "anonymous"
+
+
+//箭头函数
+
+var  add =(x,y)=>x+y;
+console.trace(1,2);
+console.trace("1","2");
+
+const isEven = n => n % 2 == 0;
+const square = n => n * n;
+
+const full = ({ first, last }) => first + ' ' + last;
+
+
+// 等同于
+function full(person) {
+    return person.first + ' ' + person.last;
+}
+
+
+function foo() {
+    setTimeout(() => {
+        console.log('id:', this.id);
+    }, 100);
+}
+
+var id = 21;
+
+foo.call({ id: 42 });
+// id: 42
+
+
+var id=21;
+function foo() {
+    setTimeout(function () {
+        console.log('id:', this.id);
+    },100);
+}
+
+foo.call({ id: 42 });
+//id: 21
