@@ -1230,3 +1230,112 @@ function foo() {
 
 foo.call({ id: 42 });
 //id: 21
+
+var s1=0;
+var s2=0;
+
+function Timer() {
+    this.s1 = 0;
+    this.s2 = 0;
+    // 箭头函数 this 指向定义的环境 在此为当前类
+    setInterval(() => this.s1++, 1000);
+    // 普通函数 this 指向当前运行的环境 这里的this指向全局环境
+    setInterval(function () {
+        this.s2++;
+    }, 1000);
+}
+
+var timer = new Timer();
+
+setTimeout(() => console.trace('timer.s1: ', timer.s1), 3100);
+setTimeout(() => console.trace('timer.s2: ', timer.s2), 3100);
+setTimeout(() => console.trace('s2: ', s2), 3100);
+// timer.s1: 3
+// timer.s2: 0
+// s2: 3
+
+//this 在es5 和es6 中的对比
+// ES6
+function foo() {
+    setTimeout(() => {
+        console.trace('id:', this.id); //this 默认绑定到当前定义的最外层环境 包括当前定义的环境中的回调函数的this
+    }, 100);
+}
+
+// ES5
+function foo() {
+    var _this = this; //防止 this 指向预期意以外的地方,所以现将其当前的值记录下来,
+
+    setTimeout(function () {
+        console.trace('id:', _this.id);
+    }, 100);
+}
+
+function foo() {
+    return () => {
+        return () => {
+            return () => {
+                console.log('id:', this.id); //this是定义环境下最外层的this,即这个this是foo的this 里面的三个匿名函数并没有this
+            };
+        };
+    };
+}
+
+var f = foo.call({id: 1});
+
+var t1 = f.call({id: 2})()(); // id: 1
+var t2 = f().call({id: 3})(); // id: 1
+var t3 = f()().call({id: 4}); // id: 1
+
+//实际上在箭头函数中并没有this,在箭头函数中的this都是指向最外层的函数的this
+//除了this，以下三个变量在箭头函数之中也是不存在的，指向外层函数的对应变量：arguments、super、new.target。
+
+function foo() {
+    setTimeout(() => {
+        console.trace('args:', arguments);
+    }, 100);
+}
+
+foo(2, 4, 6, 8)
+// args: [2, 4, 6, 8]
+
+//ES5
+function insert(value) {
+    return {into: function (array) {
+        return {after: function (afterValue) {
+            array.splice(array.indexOf(afterValue) + 1, 0, value);
+            return array;
+        }};
+    }};
+}
+
+//ES6
+insert(2).into([1, 3]).after(1); //[1, 2, 3]
+let insert = (value) => ({into: (array) => ({after: (afterValue) => {
+    array.splice(array.indexOf(afterValue) + 1, 0, value);
+    return array;
+}})});
+
+insert(2).into([1, 3]).after(1); //[1, 2, 3]
+
+//ES6 管道机制例子
+const pipeline = (...funcs) => val => funcs.reduce((a, b) => b(a), val);
+const plus1 = a => a + 1;
+const mult2 = a => a * 2;
+const addThenMult = pipeline(plus1, mult2);
+
+addThenMult(5);
+// 12
+
+ //简化写法
+const plus1 = a => a + 1;
+const mult2 = a => a * 2;
+
+mult2(plus1(5));
+
+// λ演算的写法  并不知道是什么东西!!!!
+fix = λf.(λx.f(λv.x(x)(v)))(λx.f(λv.x(x)(v)))
+
+// ES6的写法
+var fix = f => (x => f(v => x(x)(v)))
+(x => f(v => x(x)(v)));
