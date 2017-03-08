@@ -1025,7 +1025,17 @@ function push(array, ...items) {
 }
 
 var a = [];
-push(a, 1, 2, 3)
+push(a, 1, 2, 3);
+console.trace(a);
+
+function push(...items,array) {     //error:Rest parameter must be last formal parameter
+    items.forEach(function(item) {
+        array.push(item);
+    });
+}
+
+var a = [];
+push( 1, 2, 3,a);
 console.trace(a);
 
 console.trace((function(a) {}).length); // 1
@@ -1038,51 +1048,43 @@ console.trace(...[1, 2, 3]);
 console.trace(1, ...[2, 3, 4], 5);
 // 1 2 3 4 5
 
-function f(v, w, x, y, z) { }
+function f(v, w, x, y, z) {
+    console.trace(v);
+    console.trace(w);
+    console.trace(x);
+    console.trace(y);
+    console.trace(z);
+}
 var args = [0, 1];
 f(-1, ...args, 2, ...[3]);
 
 //由于JavaScript不提供求数组最大元素的函数，所以只能套用Math.max函数，将数组转为一个参数序列，然后求最大值。
 
 // ES5的写法
-function f(x, y, z) {
-    // ...
-}
-var args = [0, 1, 2];
-f.apply(null, args);
+console.trace(Math.max.apply(null, [14, 3, 77]));
 
 // ES6的写法
-function f(x, y, z) {
-    // ...
-}
-var args = [0, 1, 2];
-f(...args);
-
-// ES5的写法
-Math.max.apply(null, [14, 3, 77])
-
-// ES6的写法
-Math.max(...[14, 3, 77])
+console.trace(Math.max(...[14, 3, 77]));
 
 // 等同于
-Math.max(14, 3, 77);
+console.trace(Math.max(14, 3, 77));
 
 // ES5的写法
 var arr1 = [0, 1, 2];
 var arr2 = [3, 4, 5];
 Array.prototype.push.apply(arr1, arr2);
-
+console.trace(arr1);
 // ES6的写法
 var arr1 = [0, 1, 2];
 var arr2 = [3, 4, 5];
 arr1.push(...arr2);
-
+console.trace(arr1);
 // ES5
 new (Date.bind.apply(Date, [null, 2015, 1, 1]))
 // ES6
 new Date(...[2015, 1, 1]);
 
-[...arr1, ...arr2, ...arr3]
+
 var newArray=[...[1,2,3],...[4,5,6],...[7,8,9]];
 console.trace(newArray); //[1,2,3,4,5,6,7,8,9]
 
@@ -1090,16 +1092,16 @@ console.trace(newArray); //[1,2,3,4,5,6,7,8,9]
 console.trace(a,more);
 
 const [first, ...rest] = [1, 2, 3, 4, 5];
-first // 1
-rest  // [2, 3, 4, 5]
+console.trace(first); // 1
+console.trace(rest); // [2, 3, 4, 5]
 
 const [first, ...rest] = [];
-first // undefined
-rest  // []:
+console.trace(first); // undefined
+console.trace(rest);  // []:
 
 const [first, ...rest] = ["foo"];
-first  // "foo"
-rest   // []
+console.trace(first);  // "foo"
+console.trace(rest);   // []
 
 const [...butLast, last] = [1, 2, 3, 4, 5];
 // 报错
@@ -1125,7 +1127,7 @@ var go = function*(){
     yield 3;
 };
 
-[...go()] // [1, 2, 3]
+console.trace([...go()]); // [1, 2, 3]
 
 //
 var obj = {a: 1, b: 2}; //没有iterator接口的对象
@@ -1339,3 +1341,129 @@ fix = λf.(λx.f(λv.x(x)(v)))(λx.f(λv.x(x)(v)))
 // ES6的写法
 var fix = f => (x => f(v => x(x)(v)))
 (x => f(v => x(x)(v)));
+
+//ES6
+var key="key";
+var value="value";
+var obj={key,value};
+console.trace(obj);
+console.trace(obj.key);
+console.trace(obj.value);
+
+//ES5
+var key="key";
+var value="value";
+var obj={key:"key",value:"value"};
+//或者
+var obj={key:key,value:value};
+console.trace(obj);
+console.trace(obj.key);
+console.trace(obj.value);
+
+//ES6
+function func(x,y){
+    return {x,y};
+}
+console.trace(func(1,2));
+
+//ES5
+function func(x,y){
+    return{x:x,y:y};
+}
+console.trace(func(1,2));
+
+//ES6
+var obj={
+    func(){
+        console.trace("hello world!");
+    }
+}
+obj.func();
+
+//ES5
+var obj={
+    func:function(){
+        console.trace("hello world!");
+    }
+}
+obj.func();
+
+var obj={
+    first:"hello",
+    last:"world"
+}
+console.trace(obj.first+obj.last);
+
+var obj={
+    'first':"hello",
+    'last':"world"
+}
+console.trace(obj.first+obj.last);
+console.trace(obj['first']+obj['last']);
+
+var obj={
+    first:"hello"
+}
+obj['la'+'st']="world";
+console.trace(obj.first+obj.last);
+console.trace(obj.first+obj['last']);
+
+var first="hello";
+var last="world";
+var obj={
+    [first]:"hello",
+    [last]:"world"
+}
+console.trace(obj[first]+obj[last]);
+console.trace(obj['hello']+obj['world']);
+
+var obj={
+    ['first']:"hello",
+    last:"world"
+}
+console.trace(obj.first+obj.last);
+console.trace(obj['first']+obj.last);
+
+
+// 报错
+var foo = 'bar';
+var bar = 'abc';
+var baz = { [foo] };
+
+// 正确
+var foo = 'bar';
+var baz = { [foo]: 'abc'};
+
+
+//属性名表达式如果是一个对象，默认情况下会自动将对象转为字符串[object Object]
+var a={key:'hello'}
+var b={key:'world'}
+
+var obj={
+    [a]:'hello',
+    [b]:'world'
+}
+console.trace(obj); //Object {[object Object]: "world"}
+console.trace(obj.a+obj.b); //NaN
+
+const obj={
+    var value;
+   fuc0: function() {
+       console.trace("hello function()");
+   }
+   func1(){
+       console.trace("hello func1()");
+   }
+   set setValue(x){
+    value=c;
+   }
+   get getValue(){
+       return value;
+   }
+}
+console.trace(obj.getValue.name);
+console.trace(obj.setValue.name);
+const setDescriptor = Object.getOwnPropertyDescriptor(obj,'setValue');
+const getDescriptor = Object.getOwnPropertyDescriptor(obj,'getValue');
+console.trace(setDescriptor.name);
+console.trace(getDescriptor.name);
