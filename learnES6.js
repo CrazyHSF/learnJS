@@ -1447,23 +1447,50 @@ console.trace(obj); //Object {[object Object]: "world"}
 console.trace(obj.a+obj.b); //NaN
 
 const obj={
-    var value;
    fuc0: function() {
        console.trace("hello function()");
-   }
+   },
    func1(){
        console.trace("hello func1()");
-   }
-   set setValue(x){
-    value=c;
-   }
-   get getValue(){
-       return value;
+   },
+   set value(x){
+   },
+   get value(){
    }
 }
-console.trace(obj.getValue.name);
-console.trace(obj.setValue.name);
-const setDescriptor = Object.getOwnPropertyDescriptor(obj,'setValue');
-const getDescriptor = Object.getOwnPropertyDescriptor(obj,'getValue');
-console.trace(setDescriptor.name);
-console.trace(getDescriptor.name);
+console.trace(obj.getValue.name); //error
+console.trace(obj.setValue.name); //error
+const setDescriptor = Object.getOwnPropertyDescriptor(obj,'value');
+const getDescriptor = Object.getOwnPropertyDescriptor(obj,'value');
+console.trace(setDescriptor.get.name);
+console.trace(getDescriptor.set.name);
+
+(new Function()).name // "anonymous"
+
+var doSomething = function() {
+};
+doSomething.bind().name // "bound doSomething"
+
++0 == -0 //true
+NaN == NaN // false
+
++0 === -0 //true
+NaN === NaN // false
+
+Object.is(+0, -0) // false
+Object.is(NaN, NaN) // true
+
+var target={a:"a"}
+var resource0={b:"b"}
+var resource1={c:"c"}
+var resource2={d:"d"}
+Object.assign(target,resource0,resource1,resource2);
+console.trace(target); //Object {a: "a", b: "b", c: "c", d: "d"}
+
+var target={a:"a"}
+var resource0={b:"b"}
+var resource1={c:"c"}
+var resource2={d:"d"}
+var resource3={d:"y",c:"x"}
+Object.assign(target,resource0,resource1,resource2,resource3);
+console.trace(target); //Object {a: "a", b: "b", c: "x", d: "y"}
