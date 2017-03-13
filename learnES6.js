@@ -1165,8 +1165,9 @@ const obj = {
 'use strict';
 
 function doSomething(a, b = a) {
-    // code
+    console.trace(a,b);
 }
+doSomething("hello!  ");
 
 const doSomething = (function () {
     'use strict';
@@ -1174,6 +1175,7 @@ const doSomething = (function () {
         return value;
     };
 }());
+doSomething();
 
 function theName() {
     
@@ -1195,20 +1197,39 @@ console.trace((new Function).name);// "anonymous"
 
 //箭头函数
 
-var  add =(x,y)=>x+y;
+var add =(x,y)=>x+y;
+
+//等同于
+function add(x,y){
+    return  x+y;
+}
 console.trace(1,2);
 console.trace("1","2");
 
 const isEven = n => n % 2 == 0;
+
+//等同于
+function isEven(n){
+    return n%2;
+}
+
 const square = n => n * n;
 
-const full = ({ first, last }) => first + ' ' + last;
+//等同于
+function square(n){
+    return n*n;
+}
 
+sonsole.trace(isEven(2));
+console.trace(square(2));
+
+const full = ({ first, last }) => first + ' ' + last;
 
 // 等同于
 function full(person) {
     return person.first + ' ' + person.last;
 }
+full({first:"hello",last:"world"});
 
 
 function foo() {
@@ -1251,27 +1272,46 @@ var timer = new Timer();
 
 setTimeout(() => console.trace('timer.s1: ', timer.s1), 3100);
 setTimeout(() => console.trace('timer.s2: ', timer.s2), 3100);
+setTimeout(() => console.trace('s1: ', s1), 3100);
 setTimeout(() => console.trace('s2: ', s2), 3100);
 // timer.s1: 3
 // timer.s2: 0
+// s1:0
 // s2: 3
 
 //this 在es5 和es6 中的对比
 // ES6
 function foo() {
+    var id=11;
     setTimeout(() => {
         console.trace('id:', this.id); //this 默认绑定到当前定义的最外层环境 包括当前定义的环境中的回调函数的this
     }, 100);
 }
-
+foo();
+foo.call({id:111});
 // ES5
+
 function foo() {
+    var id=22;
+    setTimeout(function () {
+        console.trace('id:', this.id); //直接使用this
+    }, 100);
+}
+foo();
+foo.call({id:222});
+
+function foo() {
+    var id=33;
     var _this = this; //防止 this 指向预期意以外的地方,所以现将其当前的值记录下来,
 
     setTimeout(function () {
         console.trace('id:', _this.id);
     }, 100);
 }
+foo();
+foo.call({id:333});
+
+
 
 function foo() {
     return () => {
@@ -1447,23 +1487,50 @@ console.trace(obj); //Object {[object Object]: "world"}
 console.trace(obj.a+obj.b); //NaN
 
 const obj={
-    var value;
    fuc0: function() {
        console.trace("hello function()");
-   }
+   },
    func1(){
        console.trace("hello func1()");
-   }
-   set setValue(x){
-    value=c;
-   }
-   get getValue(){
-       return value;
+   },
+   set value(x){
+   },
+   get value(){
    }
 }
-console.trace(obj.getValue.name);
-console.trace(obj.setValue.name);
-const setDescriptor = Object.getOwnPropertyDescriptor(obj,'setValue');
-const getDescriptor = Object.getOwnPropertyDescriptor(obj,'getValue');
-console.trace(setDescriptor.name);
-console.trace(getDescriptor.name);
+console.trace(obj.getValue.name); //error
+console.trace(obj.setValue.name); //error
+const setDescriptor = Object.getOwnPropertyDescriptor(obj,'value');
+const getDescriptor = Object.getOwnPropertyDescriptor(obj,'value');
+console.trace(setDescriptor.get.name);
+console.trace(getDescriptor.set.name);
+
+(new Function()).name // "anonymous"
+
+var doSomething = function() {
+};
+doSomething.bind().name // "bound doSomething"
+
++0 == -0 //true
+NaN == NaN // false
+
++0 === -0 //true
+NaN === NaN // false
+
+Object.is(+0, -0) // false
+Object.is(NaN, NaN) // true
+
+var target={a:"a"}
+var resource0={b:"b"}
+var resource1={c:"c"}
+var resource2={d:"d"}
+Object.assign(target,resource0,resource1,resource2);
+console.trace(target); //Object {a: "a", b: "b", c: "c", d: "d"}
+
+var target={a:"a"}
+var resource0={b:"b"}
+var resource1={c:"c"}
+var resource2={d:"d"}
+var resource3={d:"y",c:"x"}
+Object.assign(target,resource0,resource1,resource2,resource3);
+console.trace(target); //Object {a: "a", b: "b", c: "x", d: "y"}
