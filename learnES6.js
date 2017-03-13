@@ -13,7 +13,7 @@ for(let i=0;i<4;i++){
     }
 }
 console.trace(j);
-console.trace(i);   
+console.trace(i);
 
 console.trace(x);
 var x;
@@ -58,10 +58,10 @@ let y
 var tmp = new Date();
 
 function f() {
-  console.trace(tmp);
-  if (false) {
-    var tmp = "hello world";
-  }
+    console.trace(tmp);
+    if (false) {
+        var tmp = "hello world";
+    }
 }
 
 f();
@@ -69,42 +69,42 @@ f();
 var tmp = new Date();
 
 function f() {
-  console.trace(tmp);
-  if (false) {
-    let tmp = "hello world";
-  }
+    console.trace(tmp);
+    if (false) {
+        let tmp = "hello world";
+    }
 }
 
 f();
- 
+
 
 function f1() {
-  let n = 5;
-  if (true) {
-    let n = 10;
-  }
-  console.trace(n); 
+    let n = 5;
+    if (true) {
+        let n = 10;
+    }
+    console.trace(n);
 }
 
 function f2() {
-  var n = 5;
-  if (true) {
-    var n = 10;
-  }
-  console.trace(n); 
+    var n = 5;
+    if (true) {
+        var n = 10;
+    }
+    console.trace(n);
 }
 
 f1();
 f2();
 
- //es5 报错 es6 不报错
+//es5 报错 es6 不报错
 'use strict';
 if (true) {
-  function f() {}
+    function f() {}
 }
 
 try {
-  function f() {}
+    function f() {}
 } catch(e) {
 }
 
@@ -119,12 +119,12 @@ console.trace(obj.value);
 
 
 var constantize = (obj) => {
-  Object.freeze(obj);
-  Object.keys(obj).forEach( (key, value) => {
-    if ( typeof obj[key] === 'object' ) {
-      constantize( obj[key] );
-    }
-  });
+    Object.freeze(obj);
+    Object.keys(obj).forEach( (key, value) => {
+        if ( typeof obj[key] === 'object' ) {
+            constantize( obj[key] );
+        }
+    });
 };
 
 constantize(obj);
@@ -136,15 +136,15 @@ console.trace(obj.name);
 
 window.a="this is window.a ";
 {
-  var a="this is a ";
+    var a="this is a ";
 }
 console.trace(a);
 console.trace(window.a);
 
 window.a="this is window.a";
 {
-  let a="this is a";
-  let b="this is b"
+    let a="this is a";
+    let b="this is b"
 }
 console.trace(a);
 console.trace(window.a);
@@ -235,10 +235,10 @@ console.trace(tag);
 console.trace(flag);
 
 let foo;
-({foo} = {foo: 1}); 
+({foo} = {foo: 1});
 
 let baz;
-({bar: baz} = {bar: 1}); 
+({bar: baz} = {bar: 1});
 
 console.trace(foo);
 console.trace(baz);
@@ -255,7 +255,7 @@ let {foo:{bar}}={flag:{baz:"baz"}}; //报错
 let x;
 {x} = {x: 1};      //错误,被解释为了代码块,
 
-let x;  
+let x;
 ({x} = {x: 1}); //正确,
 
 let arr = [1, 2, 3];
@@ -275,7 +275,7 @@ s === Number.prototype.toString  // true
 
 let {toString: s} = true;
 s === Boolean.prototype.toString // true
- //s在最后将被赋值为一个函数，
+//s在最后将被赋值为一个函数，
 
 let { value: x } = undefined; // TypeError
 let { value: y } = null; // TypeError
@@ -315,12 +315,12 @@ for (let i of text) {
 var s = 'Hello world!';
 
 console.trace(
-s.startsWith('world'),
-s.endsWith('Hello'),
-s.includes('Hello'),
-s.startsWith('world', 6),
-s.endsWith('Hello', 5),
-s.includes('Hello', 6)
+    s.startsWith('world'),
+    s.endsWith('Hello'),
+    s.includes('Hello'),
+    s.startsWith('world', 6),
+    s.endsWith('Hello', 5),
+    s.includes('Hello', 6)
 );
 
 console.trace("hello".repeat(1));
@@ -1178,7 +1178,7 @@ const doSomething = (function () {
 doSomething();
 
 function theName() {
-    
+
 }
 console.trace(theName.name);
 
@@ -1369,7 +1369,7 @@ const addThenMult = pipeline(plus1, mult2);
 addThenMult(5);
 // 12
 
- //简化写法
+//简化写法
 const plus1 = a => a + 1;
 const mult2 = a => a * 2;
 
@@ -1487,16 +1487,16 @@ console.trace(obj); //Object {[object Object]: "world"}
 console.trace(obj.a+obj.b); //NaN
 
 const obj={
-   fuc0: function() {
-       console.trace("hello function()");
-   },
-   func1(){
-       console.trace("hello func1()");
-   },
-   set value(x){
-   },
-   get value(){
-   }
+    fuc0: function() {
+        console.trace("hello function()");
+    },
+    func1(){
+        console.trace("hello func1()");
+    },
+    set value(x){
+    },
+    get value(){
+    }
 }
 console.trace(obj.getValue.name); //error
 console.trace(obj.setValue.name); //error
