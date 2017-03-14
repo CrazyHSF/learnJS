@@ -1465,7 +1465,7 @@ console.trace(obj.first+obj.last);
 console.trace(obj['first']+obj.last);
 
 
-// 报错
+// 报错 属性名表达式和简洁写法不能同时使用
 var foo = 'bar';
 var bar = 'abc';
 var baz = { [foo] };
@@ -1509,16 +1509,25 @@ console.trace(getDescriptor.set.name);
 
 var doSomething = function() {
 };
-doSomething.bind().name // "bound doSomething"
+console.trace(doSomething.bind().name); // "bound doSomething"
 
-+0 == -0 //true
-NaN == NaN // false
+const key1 = Symbol('description');
+const key2 = Symbol();
+let obj = {
+    [key1]() {},
+    [key2]() {},
+};
+console.trace(obj[key1].name);// "[description]"
+console.trace(obj[key2].name); // ""
 
-+0 === -0 //true
-NaN === NaN // false
+console.trace(+0 == -0);//true
+console.trace(NaN == NaN);// false
 
-Object.is(+0, -0) // false
-Object.is(NaN, NaN) // true
+console.trace(+0 === -0); //true
+console.trace(NaN === NaN);// false
+
+console.trace(Object.is(+0, -0)); // false
+console.trace(Object.is(NaN, NaN)); // true
 
 var target={a:"a"}
 var resource0={b:"b"}
@@ -1534,3 +1543,34 @@ var resource2={d:"d"}
 var resource3={d:"y",c:"x"}
 Object.assign(target,resource0,resource1,resource2,resource3);
 console.trace(target); //Object {a: "a", b: "b", c: "x", d: "y"}
+
+var obj={x:"x"}
+
+console.trace(Object.assign(obj)===obj);
+// Object.assign(undefined) // 报错
+// Object.assign(null) // 报错
+
+console.trace(Object.assign(obj,null)===obj);
+console.trace(Object.assign(obj,undefined)===obj);
+
+var v1 = 'abc';
+var v2 = true; //不产生影响
+var v3 = 10;  //不产生影响
+
+var obj = Object.assign({}, v1, v2, v3);
+console.trace(obj); // { "0": "a", "1": "b", "2": "c" }
+
+console.trace(Object(true));// {[[PrimitiveValue]]: true}
+console.trace(Object(10)); //  {[[PrimitiveValue]]: 10}
+console.trace(Object('abc')); // {0: "a", 1: "b", 2: "c", length: 3, [[PrimitiveValue]]: "abc"}
+
+var obj1 = {a: {b: 1}};
+var obj2 = Object.assign({}, obj1); //实际上还是跟obj1中的a中的对象.
+
+obj1.a.b = 2;
+console.trace(obj2.a.b);  //其实是同一个对象
+
+var target = { a: { b: 'c', d: 'e' } }
+var source = { a: { b: 'hello' } }
+Object.assign(target, source); //对象的值会被直接替换掉,因为你想当于 a的value是一个对象,给其添加的是偶相当于是给a的value重新赋值.
+console.trace(target);
