@@ -1574,3 +1574,46 @@ var target = { a: { b: 'c', d: 'e' } }
 var source = { a: { b: 'hello' } }
 Object.assign(target, source); //对象的值会被直接替换掉,因为你想当于 a的value是一个对象,给其添加的是偶相当于是给a的value重新赋值.
 console.trace(target);
+
+var arr1=[1,2,3,4,5];
+var arr2=[9,8];
+Object.assign(arr1,arr2);
+console.trace(arr1); //[9,8,3,4,5]
+
+class Point{
+    constructor(x,y){
+        Object.assign(this,{x,y});
+    }
+}
+var point=new Point(1,2);
+console.trace(point);
+
+class Point{
+    constructor(x,y){
+        Object.assign(this,{x,y});
+    }
+}
+
+Object.assign(Point.prototype,{
+    showPoint(){
+        console.trace(this.x,this.y);
+    },
+    clearPoint(){
+        this.x=0;
+        this.y=0;
+    }
+});
+
+
+var point =new Point(1,2);
+console.trace(point);
+point.showPoint();
+point.clearPoint();
+point.showPoint();
+
+var clone=obj=>Object.assign({},obj);
+
+var clone=obj=>{
+    let protoobj=Object.getPrototypeOf(obj);
+    return Object.assign(Object.create(protoObj), obj);
+}
