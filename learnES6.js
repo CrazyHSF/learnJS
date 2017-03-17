@@ -1617,3 +1617,111 @@ var clone=obj=>{
     let protoobj=Object.getPrototypeOf(obj);
     return Object.assign(Object.create(protoObj), obj);
 }
+
+var obj={key0:"hello"};
+console.trace(Object.getOwnPropertyDescriptor(obj,'key0'));
+
+console.trace(Object.getOwnPropertyDescriptor(class {foo() {}}.prototype, 'foo').enumerable);
+
+// es6的写法  继承someOtherObj
+var obj = {
+    method: function() { ... }
+};
+obj.__proto__ = someOtherObj;
+
+// es5的写法 继承someOtherObj
+var obj = Object.create(someOtherObj);
+obj.method = function() { ... };
+
+var o = Object.setPrototypeOf({}, null);
+//运行之后的返回值和成功执行之后的桉树对象{}一样.
+
+let proto = {};
+let obj = { x: 10 };
+let newObj=Object.setPrototypeOf(obj, proto);
+
+proto.y = 20;
+proto.z = 40;
+
+console.trace(obj.x); // 10
+console.trace(obj.y); // 20
+console.trace(obj.z); // 40
+
+console.trace(newObj===obj);
+
+console.trace(Object.setPrototypeOf(1, {}) === 1);// true
+console.trace(Object.setPrototypeOf('foo', {}) === 'foo'); // true
+console.trace(Object.setPrototypeOf(true, {}) === true); // tru
+
+console.trace(Object.setPrototypeOf(undefined, {}));
+// TypeError: Object.setPrototypeOf called on null or undefined
+
+console.trace(Object.setPrototypeOf(null, {}));
+// TypeError: Object.setPrototypeOf called on null or undefined
+
+let mySymble=Symbol();
+console.trace(typeof(mySymble));
+
+
+var s1 = Symbol('foo');
+var s2 = Symbol('bar');
+var s3 = Symbol();
+var s4 = Symbol();
+var s5 = Symbol("test");
+var s6 = Symbol("test");
+
+console.trace(s1.toString()); // "Symbol(foo)"
+console.trace(s2.toString()) // "Symbol(bar)"
+console.trace(s1);
+console.trace(s2);
+console.trace(s3);
+console.trace(s1===s2);
+console.trace(s3===s4);
+console.trace(s5===s6);
+
+console.trace(s1+s2);
+console.trace(s1+1);
+console.trace(s1+"hello");
+
+var mySymbol = Symbol();
+
+// 第一种写法
+var a = {};
+a[mySymbol] = 'Hello!';
+console.trace(a[mySymbol]);
+
+// 第二种写法
+var b = {
+    [mySymbol]: 'Hello!'
+};
+console.trace(b[mySymbol]);
+
+// 第三种写法
+var c = {};
+Object.defineProperty(c, mySymbol, { value: 'Hello!' });
+console.trace(c[mySymbol]);
+
+var mySymbol = Symbol();
+
+var a = {};
+
+a.mySymbol = 'Hello!';
+console.trace(a[mySymbol]); // undefined
+console.trace(a['mySymbol']); // "Hello!"
+
+//看似成功了其实最终属性名mySymbol这个字符串,而不是mySymbol这个Symbol值.
+let s = Symbol();
+
+let obj = {
+    [s]: function (value) {
+        console.trace("arg:"+value);
+    }
+};
+
+obj[s](111);
+
+let newObj={
+    [s](value){console.trace("arg:"+value)}
+}
+
+newObj[s](222);
