@@ -1725,3 +1725,126 @@ let newObj={
 }
 
 newObj[s](222);
+
+var log={}
+log.levels = {
+    DEBUG: Symbol('debug'),
+    INFO: Symbol('info'),
+    WARN: Symbol('warn')
+};
+console.trace(log.levels.DEBUG, 'debug message');
+console.trace(log.levels.INFO, 'info message');
+console.trace(log.levels.WARN,'warn message');
+
+var obj = {};
+var a = Symbol('a');
+var b = Symbol('b');
+
+obj[a] = 'Hello a';
+obj[b] = 'hello b';
+obj.c="hello c";
+obj.d="hello d";
+
+var objectSymbols = Object.getOwnPropertySymbols(obj);
+// for(var item of obj){    obj[Symbol.iterator] is not a function
+//     console.trace(item);
+// }
+for(var item in obj){
+    console.trace(item);
+}
+console.trace(Object.getOwnPropertyNames(obj));
+console.trace(JSON.stringify(obj));
+console.trace(Object.keys(obj));
+console.trace(Object.getOwnPropertySymbols(obj));
+
+var s1 = Symbol.for('foo');
+var s2 = Symbol.for('foo');
+
+s1 === s2 // true
+
+var s1 = Symbol.for("foo");
+console.trace(Symbol.keyFor(s1)); // "foo"
+
+var s2 = Symbol("foo");
+console.trace(Symbol.keyFor(s2)); // undefined
+
+class Even {
+    static [Symbol.hasInstance](obj) {
+        return Number(obj) % 2 === 0;
+    }
+}
+
+console.trace(1 instanceof Even); // false
+console.trace(2 instanceof Even); // true
+console.trace(12345 instanceof Even); // false
+
+let arr1 = ['c', 'd'];
+console.trace(['a', 'b'].concat(arr1, 'e'));
+// ['a', 'b', 'c', 'd', 'e']
+// 默认数组会展开然后加入目标数组中
+console.trace(arr1[Symbol.isConcatSpreadable]); // undefined
+
+let arr2 = ['c', 'd'];
+arr2[Symbol.isConcatSpreadable] = false;
+console.trace(['a', 'b'].concat(arr2, 'e')); //
+// ['a', 'b', ['c','d'], 'e']
+// 设为false的时候数组会一数组的形式直接插入目标数组中
+
+let obj = {length: 2, 0: 'c', 1: 'd'};
+console.trace(['a', 'b'].concat(obj, 'e')); // ['a', 'b', obj, 'e']
+console.trace(obj[Symbol.isConcatSpreadable]);
+
+obj[Symbol.isConcatSpreadable] = true;
+console.trace(['a', 'b'].concat(obj, 'e')); // ['a', 'b', 'c', 'd', 'e']
+
+class MyArray extends Array {
+    static get [Symbol.species]() { return Array; }
+    //将构造函数的改为Array 而不是默认的MyArray
+}
+var a = new MyArray(1,2,3);
+var mapped = a.map(x => x * x);
+
+console.trace(mapped instanceof MyArray); // false
+console.trace(mapped instanceof Array); // true
+
+String.prototype.match(regexp)
+// 等同于
+regexp[Symbol.match](this)
+
+class MyMatcher {
+    [Symbol.match](string) {
+        return 'hello world'.indexOf(string);
+    }
+}
+
+console.trace('e'.match(new MyMatcher()));  // 1
+
+var obj={};
+var arr=new Array();
+var set=new Set();
+arr.push(1);
+set.add(1);
+arr.push(1);
+set.add(1);
+arr.push(2);
+set.add(2);
+arr.push(2);
+set.add(2);
+arr.push(NaN);
+set.add(NaN);
+arr.push(NaN);
+set.add(NaN);
+arr.push(undefined);
+set.add(undefined);
+arr.push(undefined);
+set.add(undefined);
+arr.push({});
+set.add({});
+arr.push({});
+set.add({});
+arr.push(obj);
+set.add(obj);
+arr.push(obj);
+set.add(obj);
+console.trace(arr);
+console.trace(set);
