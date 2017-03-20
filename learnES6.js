@@ -1848,3 +1848,170 @@ arr.push(obj);
 set.add(obj);
 console.trace(arr);
 console.trace(set);
+console.trace(set.has(1));
+set.delete(1);
+console.trace(set);
+console.trace(set.has(1));
+
+let set = new Set(['red', 'green', 'blue']);
+
+for (let item of set.keys()) {
+    console.trace(item);
+}
+
+
+for (let item of set.values()) {
+    console.trace(item);
+}
+
+for (let item of set.entries()) {
+    console.trace(item);
+}
+//["red", "red"]
+//["green", "green"]
+//["blue", "blue"]
+
+Set.prototype[Symbol.iterator] === Set.prototype.values
+//true
+
+let set = new Set(['red', 'green', 'blue']);
+for(let item of set){
+    console.trace(item);
+}
+//red
+//green
+//blue
+
+let set = new Set([1, 2, 3]);
+set.forEach((value, key) => console.trace(value * 2) )
+//2
+//4
+//6
+
+let set = new Set(['red', 'green', 'blue']);
+let arr = [...set];
+console.trace(arr);
+
+//没有办法直接改变set中的元素的值,只有在原来的set的基础之上重新创建一个新的set将改变后的值加入到set中.
+// 方法一
+let set1 = new Set([1, 2, 3]);
+set1 = new Set([...set1].map(val => val * 2));
+console.trace(set1);
+// set的值是2, 4, 6
+
+// 方法二
+let set2 = new Set([1, 2, 3]);
+set2 = new Set(Array.from(set2, val => val * 2));
+console.trace(set2);
+// set的值是2, 4, 6
+
+var a = [[1,2], [3,4]];
+var ws = new WeakSet(a);
+console.trace(ws);
+
+var map = new Map();
+var obj={};
+var boolean=true;
+var string="String";
+var array=[1,2,3];
+var undef=undefined;
+var nu=null;
+var number=1;
+var symbol=Symbol();
+map.set(obj,"helloObj");
+map.set(boolean,"helloBoolean");
+map.set(string,"helliString");
+map.set(array,"helloArray");
+map.set(undef,"helloUndefined");
+map.set(nu,"helloNull");
+map.set(number,"helloNumber");
+map.set(symbol,"helloSymbol");
+console.trace(map.get(obj));
+console.trace(map.get(boolean));
+console.trace(map.get(string));
+console.trace(map.get(array));
+console.trace(map.get(undef));
+console.trace(map.get(nu));
+console.trace(map.get(number));
+console.trace(map.get(symbol));
+
+map.set(obj,obj);
+obj.a="helloa";
+obj.b="hellob";
+
+console.trace(map.get(obj));
+
+number=123;
+console.trace(map.get(number));
+map.set(number,boolean);
+console.trace(map.get(number));
+boolean=false;
+console.trace(map.get(number));
+map.set(123,string);
+console.trace(map.get(123));
+
+//map to array
+let myMap = new Map().set(true, 7).set({foo: 3}, ['abc']);
+[...myMap]
+// [ [ true, 7 ], [ { foo: 3 }, [ 'abc' ] ] ]
+
+//array to map
+new Map([[true, 7], [{foo: 3}, ['abc']]])
+// Map {true => 7, Object {foo: 3} => ['abc']}
+
+//map to Object
+function strMapToObj(strMap) {
+    let obj = Object.create(null);
+    for (let [k,v] of strMap) {
+        obj[k] = v;
+    }
+    return obj;
+}
+
+let myMap = new Map().set('yes', true).set('no', false);
+strMapToObj(myMap)
+// { yes: true, no: false }
+
+//Object to Map
+function objToStrMap(obj) {
+    let strMap = new Map();
+    for (let k of Object.keys(obj)) {
+        strMap.set(k, obj[k]);
+    }
+    return strMap;
+}
+
+objToStrMap({yes: true, no: false})
+// [ [ 'yes', true ], [ 'no', false ] ]
+
+//Map to Json
+function strMapToJson(strMap) {
+    return JSON.stringify(strMapToObj(strMap));
+}
+
+let myMap = new Map().set('yes', true).set('no', false);
+strMapToJson(myMap)
+// '{"yes":true,"no":false}'
+
+function mapToArrayJson(map) {
+    return JSON.stringify([...map]);
+}
+
+let myMap = new Map().set(true, 7).set({foo: 3}, ['abc']);
+mapToArrayJson(myMap)
+// '[[true,7],[{"foo":3},["abc"]]]'
+
+//Json to Map
+function jsonToStrMap(jsonStr) {
+    return objToStrMap(JSON.parse(jsonStr));
+}
+
+jsonToStrMap('{"yes":true,"no":false}')
+// Map {'yes' => true, 'no' => false}
+
+function jsonToMap(jsonStr) {
+    return new Map(JSON.parse(jsonStr));
+}
+
+jsonToMap('[[true,7],[{"foo":3},["abc"]]]')
+// Map {true => 7, Object {foo: 3} => ['abc']}
