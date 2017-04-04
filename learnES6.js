@@ -2015,3 +2015,492 @@ function jsonToMap(jsonStr) {
 
 jsonToMap('[[true,7],[{"foo":3},["abc"]]]')
 // Map {true => 7, Object {foo: 3} => ['abc']}
+
+var obj=new Proxy({},{
+    get:function(target,key,receiver){
+        console.trace(`getting ${key}!`);
+        return Reflect.get(target,key);
+    },
+    set:function(target,key,value,receiver){
+        console.trace(`setting ${key}!`);
+        return Reflect.set(target,key,value,receiver);
+    }
+});
+
+obj.count = 1;
+++obj.count
+
+var proxy= new Proxy({},{
+   get: function(target,property){
+       return 35;
+   }
+});
+
+console.trace(proxy.name);
+console.trace(proxy.title);
+console.trace(proxy.time);
+
+var target = {};
+var handler = {};
+var proxy = new Proxy(target,handler);
+proxy.a='b';
+targer.a;
+
+ var proxy=new Proxy({},{
+     get:function(target,property){
+        return 35;
+     }
+ });
+
+let obj=Object.create(proxy);
+obj.time;
+
+var handler = {
+    get:function(target,name){
+        if(name === 'prototype'){
+            return Object.prototype;
+        }
+        return 'hello'+name;
+    },
+    apply:function(target,thisBinding,args){
+        return args[0];
+    },
+    construct: function(target,args){
+        return {value: args[1]},
+    }
+};
+
+var fproxy = new Proxy(function(x,y){
+    return x+y;
+},handler);
+
+fproxy(1,2);
+ new fproxy(1,2);
+ fproxy.prototype === Object.prototype;
+ console.trace(fproxy.foo);
+
+ var person={
+     name:'xxx'
+ };
+
+ var proxy= new Proxy(person,{
+     get: function(target,property){
+        if(property in target){
+            return target[property];
+        } else {
+            throw new ReferenceError("property \""+property+"\" does not exist.");
+        }
+     }
+ });
+
+ proxy.name;
+ proxy.age;
+
+
+ let proto = new Proxy({},{
+     get(target,propertyKey,receiver){
+         console.trace("GET"+propertyKey);
+         return target[propertyKey];
+     }
+ });
+
+ let arr = createArray('a','b','c');
+ console.trace(arr[-1]);
+
+ var pipe = (function(){
+     return function (value){
+         var funcStack = [];
+         var oproxy = new Proxy({},{
+             get : function(pipeObject,fnName){
+                 if(fnName==='get'){
+                     return funcStack.reduce(function(val,fn){
+                         return fn(val);
+                     },value);
+                 }
+                 funcStack.push(window[fnName]);
+                 return oproxy;
+             }
+         });
+         return oproxy;
+     }
+ }());
+
+ var double = n => n * 2;
+ var pow = n => n * n;
+ var reverseInt = n => n.toStirng().split("").reverse().join("") | 0;
+ pipe(3).double.pow.reverseInt.get;
+
+ const target = Object.defineProperties({}.{
+   foo:{
+       value:123,
+       writable:false,
+       configurable:false
+    },
+});
+
+ const handler = {
+     get(target,propKey){
+         return "abc";
+     }
+ }
+
+ const proxy =  new Proxy(target,handler);
+ proxy.foo;
+
+ let handler = {
+     get (target,key){
+         invariant(key,'get');
+         return target[key];
+     },
+     set(target,key,value){
+         invariant(key,'set');
+         target[key]=value;
+         return true;
+     }
+ };
+
+ function invariant(key,action){
+     if(key[0] === "_"){
+         throw new  Error(`Incalid attemp to ${action} private "${key}" property `);
+     }
+ }
+ var target = {};
+ var proxy = new Proxy(target,handler);
+ proxy._prop
+ proxy._prop = 'c';
+
+var handler = {
+    apply (target,ctx,args){
+        return Reflect.apply(...arguments);
+    }
+};
+
+var target = function(){
+    return 'I am the proxy';
+};
+
+var handler = function(){
+    apply:function(){
+        return 'I am the proxy';
+    }
+};
+
+var p = new Proxy(target,handler);
+
+p();
+
+var twice = {
+    apply(target,ctx,args){
+        return Reflect.apply(...arguments)*2;
+    }
+};
+
+function sum(letf,right){
+    return left + right;
+}
+
+var proxy = new Proxy(sum,twice);
+proxy(1,2);
+proxy.call(null,5,6);
+proxy.apply(null,[7,8]);
+
+Reflect.apply(proxy,null,[9,10]);
+
+
+var handler = {
+    has (target,key) {
+        if (key[0] === "_") {
+            return false;
+        }
+        return key in target;
+    }
+};
+var target ={ _prop : 'foo',prop:'foo'};
+var proxy = new Proxy(target,handler);
+'_prop' in proxy
+
+var obj ={a:10};
+Object.preventExtensions(obj);
+
+var p = new Proxy(obj,{
+    has:function (target,prop){
+        return false;
+    }
+});
+
+'a' in p
+
+let stu1 = {name:'张三',score:59};
+let stu2 = {name:'李四',score:99};
+
+let handler = {
+    has (target,prop){
+        if(prop === 'score' && target[prop]<60){
+            console.trace(`${target.name} 不及格`);
+            return false;
+        }
+        return prop in target;
+    }
+}
+
+let oproxy1 = new Proxy(stu1,handler);
+let oproxy2 = new Proxy(stu2,handler);
+
+'score' in oproxy1;
+'score' in oproxy2;
+
+for(let a in  oproxy1){
+    console.trace(oproxy1[a]);
+}
+
+for(let b in oproxy2){
+    console.trace(oproxy2[b]);
+}
+
+var handler = {
+    construct (target,args,newTarget){
+        return new target(...args);
+    }
+};
+
+var obj = new  Proxy(function(){},{
+   construct: function(target,args) {
+       console.trace('called: '+args.join(','));
+       retrun {value:args[0]*10};
+   }
+});
+
+(new p(1)).value
+
+var p = new Proxy(function(){},{
+    construct:function(target,argumentsList){
+        return 1;
+    }
+});
+
+p();
+
+var handler = {
+    deleteProperty(target,key){
+        invariant(key,'delete');
+        return true;
+    }
+}
+
+function invariant(key,action){
+    if(key[0] === '_'){
+        throw new Error(`Invalid attemp to ${action} private "${key}" property`);
+    }
+}
+
+var target = {_prop : "foo"};
+var proxy = new Proxy(target,handler);
+delete proxy._prop
+
+var handler = {
+    defineProperty(target,key,descriptor){
+        return false;
+    }
+};
+
+var target = {};
+var proxy = new proxy(target,handler);
+proxy.foo = 'bar';
+
+var handler={
+    getOwnPropertyDescriptor(target,key){
+        if(key[0] === '_'){
+            return;
+        }
+        return Object.getOwnPropertyDescriptor(target,key);
+    }
+};
+
+var target = {_foo:'bar',baz:"tar"};
+var proxy = new Proxy(target,handler);
+Object.getOwnPropertyDescriptor(proxy,'wat');
+Object.getOwnPropertyDescriptor(proxy,'_foo');
+Object.getOwnPropertyDescriptor(proxy,'baz');
+
+var proto ={};
+var p = new Proxy({},{
+    getPrototypeOf(target){
+        return proto;
+    }
+});
+
+Object.getPrototypeOf(p) === proto;
+
+var p = new Proxy({},{
+    isExtensible : function(target){
+        console.trace("called");
+        return true;
+    }
+});
+
+Object.isExtensible(p);
+
+
+Object.isExtensible(proxy) === Obejct.isExtensible(target)
+
+var p = new Proxy({},{
+    isExtensible : function(target){
+        return false;
+    }
+});
+
+Object.isExtensible(p);
+
+let target={
+    a:1,
+    b:2,
+    c:3
+};
+
+let handler = {
+    ownKey(target){
+        return ['a'];
+    }
+};
+
+let proxy = new Proxy(target,handler);
+
+Object.keys(proxy);
+
+let target = {
+    _bar: 'foo',
+    _prop: 'bar',
+    prop: 'baz'
+};
+
+let handler = {
+    ownKeys (target){
+        return Reflect.ownKeys(target).filter(key => key[0]!=='_');
+    }
+};
+
+let proxy = new Proxy(target,handler);
+for (let key of Object.keys(proxy)){
+    console.trace(target[key]);
+}
+
+let target = {
+    a:1,
+    b:2,
+    c:3,
+    [Symbol.for('secret')]:'4',
+};
+
+Object.defineProperties(target,'key',{
+    enumerable:false,
+    configurable:true,
+    writable;true,
+    value:'static'
+});
+
+let handler = {
+    ownKeys(target){
+        return ['a','b',Symbol.for('secret'),'key'];
+    }
+};
+
+let proxy = new Proxy(target,handler);
+Object.keys(proxy)
+
+var p = new Proxy({},{
+    ownKeys:function(target){
+        return ['a','b','c'];
+    }
+});
+
+Object.getOwnPropertyNames(p);
+
+var obj = {};
+var p = new Proxy(obj,{
+    ownKeys:function(target){
+        return [123,true,undefined,null,{},[]];
+    }
+});
+
+Object.getOwnPropertyNames(p);
+
+var  obj = {};
+Object.defineProperty(obj,'a',{
+    configurable : false,
+    enumerable : true,
+    value:10
+});
+
+var p = new Proxy(obj,{
+    ownKeys:function(target){
+        return ['b'];
+    }
+});
+
+Object.getOwnPropertyNames(p);
+
+var obj = {
+    a : 1;
+};
+
+Object.preventExtensions(obj);
+
+var p=new proxy(obj,{
+    ownKeys :function(target){
+        return ['a','b'];
+    }
+});
+
+Object.getOwnPropertyNames(p);
+
+var p = new proy({},{
+    preventExtensions : function (traget) {
+        return true;
+    }
+});
+
+Object.preventExtensions(p);
+
+var p = new Proxy({},{
+    preventExtensions : function(target){
+        console.trace('called');
+        Object.preventExtensions(traget);
+        return true;
+    }
+});
+
+Object.preventExtensions(p);
+
+var handler = {
+    setPrototypeOf(target,proto){
+        throw new Error('Changing the prototype is forbidden');
+    }
+};
+
+var proto = {};
+var target = function(){};
+var proxy = new Proxy(target,handler);
+Object.setPrototypeOf(proxy,proto);
+
+let target = {};
+let handler = {};
+let {proxy,revoke} = Proxy.revocable(target,handler);
+proxy.foo = 123;
+console.trace(Proxy.foo);
+revoke();
+console.trace(proxy.foo);
+
+const target = {
+    m : function(){
+        console.trace(this === proxy);
+    }
+};
+
+const handler = {};
+
+const proxy = new Proxy(target,handler);
+
+target.m();
+proxy.m();
+
+const_name= new WeakMap();
