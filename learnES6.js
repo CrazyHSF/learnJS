@@ -2044,7 +2044,7 @@ var target = {};
 var handler = {};
 var proxy = new Proxy(target,handler);
 proxy.a='b';
-targer.a;
+console.trace(target.a);
 
  var proxy=new Proxy({},{
      get:function(target,property){
@@ -2053,20 +2053,20 @@ targer.a;
  });
 
 let obj=Object.create(proxy);
-obj.time;
+console.trace(obj.time);
 
 var handler = {
     get:function(target,name){
         if(name === 'prototype'){
             return Object.prototype;
         }
-        return 'hello'+name;
+        return 'hello '+name;
     },
     apply:function(target,thisBinding,args){
         return args[0];
     },
     construct: function(target,args){
-        return {value: args[1]},
+        return {value: args[1]};
     }
 };
 
@@ -2074,10 +2074,10 @@ var fproxy = new Proxy(function(x,y){
     return x+y;
 },handler);
 
-fproxy(1,2);
- new fproxy(1,2);
- fproxy.prototype === Object.prototype;
- console.trace(fproxy.foo);
+console.trace(fproxy(1,2));
+console.trace(new fproxy(1,2));
+console.trace(fproxy.prototype === Object.prototype);
+console.trace(fproxy.foo);
 
  var person={
      name:'xxx'
