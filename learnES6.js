@@ -2016,6 +2016,7 @@ function jsonToMap(jsonStr) {
 jsonToMap('[[true,7],[{"foo":3},["abc"]]]')
 // Map {true => 7, Object {foo: 3} => ['abc']}
 
+//Proxy
 var obj=new Proxy({},{
     get:function(target,key,receiver){
         console.trace(`getting ${key}!`);
@@ -2079,6 +2080,7 @@ console.trace(new fproxy(1,2));
 console.trace(fproxy.prototype === Object.prototype);
 console.trace(fproxy.foo);
 
+//get
  var person={
      name:'xxx'
  };
@@ -2093,8 +2095,8 @@ console.trace(fproxy.foo);
      }
  });
 
- proxy.name;
- proxy.age;
+ console.trace(proxy.name);
+ console.trace(proxy.age);
 
 
  let proto = new Proxy({},{
@@ -2103,6 +2105,25 @@ console.trace(fproxy.foo);
          return target[propertyKey];
      }
  });
+
+let obj = Object.create(proto);
+obj.xxx // "GET xxx"
+
+
+function createArray(...elements){
+    let handler = {
+        get(target,propKey,reciever){
+            let index = Number(propKey);
+            if(index < 0){
+                propKey = String(target.length + index);
+            }
+            return Reflect.get(target,propKey,reciever);
+        }
+    };
+    let target = [];
+    target.push(...elements);
+    return new Proxy(target,handler);
+}
 
  let arr = createArray('a','b','c');
  console.trace(arr[-1]);
@@ -2127,10 +2148,18 @@ console.trace(fproxy.foo);
 
  var double = n => n * 2;
  var pow = n => n * n;
- var reverseInt = n => n.toStirng().split("").reverse().join("") | 0;
- pipe(3).double.pow.reverseInt.get;
+ var reverseInt = n => n.toString().split("").reverse().join("") | 0;
+ console.trace(pipe(3).double.pow.reverseInt.get);
+ console.trace(pipe().double.pow.reverseInt.get);
 
- const target = Object.defineProperties({}.{
+ var func=function(){
+     return function (value){
+         return console.trace(value);
+     };
+ }();
+func(11);
+
+ const target = Object.defineProperties({},{
    foo:{
        value:123,
        writable:false,
@@ -2145,7 +2174,29 @@ console.trace(fproxy.foo);
  }
 
  const proxy =  new Proxy(target,handler);
- proxy.foo;
+ console.trace(proxy.foo);
+
+//set
+
+ let validator = {
+     set: function(obj,prop,value){
+        if(prop === 'age'){
+            if(!Number.isInteger(value)){
+                throw new TypeError('The age is not a integer');
+            }
+            if(value > 200){
+                throw new RangeError('The age is seems invalid');
+            }
+        }
+         obj[prop] = value;
+     }
+ };
+
+ let person = new Proxy({},validator);
+ person.age=100;
+ console.trace(person.age);
+ person.age = 'young';
+ person.age = 300;
 
  let handler = {
      get (target,key){
@@ -2168,7 +2219,27 @@ console.trace(fproxy.foo);
  var proxy = new Proxy(target,handler);
  proxy._prop
  proxy._prop = 'c';
+ proxy.prop
+ proxy.prop = 'c';
 
+ var setObj = Object.defineProperties({},{
+     foo:{
+         value : 123,
+         writable : false,
+         configurable : false
+     }
+ });
+
+ var proxy = new Proxy(setObj,{
+     set: function(obj,prop,value){
+         obj[prop] = value;
+     }
+ })
+
+proxy.foo = 'hello';
+console.trace(proxy.foo);
+
+//apply
 var handler = {
     apply (target,ctx,args){
         return Reflect.apply(...arguments);
@@ -2176,10 +2247,10 @@ var handler = {
 };
 
 var target = function(){
-    return 'I am the proxy';
+    return 'I am the target';
 };
 
-var handler = function(){
+var handler = {
     apply:function(){
         return 'I am the proxy';
     }
@@ -2195,16 +2266,16 @@ var twice = {
     }
 };
 
-function sum(letf,right){
+function sum(left,right){
     return left + right;
 }
 
 var proxy = new Proxy(sum,twice);
-proxy(1,2);
-proxy.call(null,5,6);
-proxy.apply(null,[7,8]);
 
-Reflect.apply(proxy,null,[9,10]);
+console.trace(proxy(1,2));
+console.trace(proxy.call(null,5,6));
+console.trace(proxy.apply(null,[7,8]));
+console.trace(Reflect.apply(proxy,null,[9,10]));
 
 
 var handler = {
@@ -2215,9 +2286,13 @@ var handler = {
         return key in target;
     }
 };
-var target ={ _prop : 'foo',prop:'foo'};
+var target ={
+    _prop : 'foo',
+    prop:'foo'
+};
 var proxy = new Proxy(target,handler);
-'_prop' in proxy
+console.trace('_prop' in proxy);
+console.trace('prop' in proxy);
 
 var obj ={a:10};
 Object.preventExtensions(obj);
@@ -2228,7 +2303,23 @@ var p = new Proxy(obj,{
     }
 });
 
-'a' in p
+console.trace('a' in p);
+//TypeError
+
+var obj = {a : 10};
+var pobj = Object.create(obj);
+pobj.b = 12;
+
+var proxy = new Proxy(pobj,{
+    has : function(target,prop){
+        return Reflect.has(target,prop);
+    }
+})
+
+console.trace('a' in proxy);
+console.trace('b' in proxy);
+console.trace('c' in proxy);
+
 
 let stu1 = {name:'张三',score:59};
 let stu2 = {name:'李四',score:99};
@@ -2246,8 +2337,8 @@ let handler = {
 let oproxy1 = new Proxy(stu1,handler);
 let oproxy2 = new Proxy(stu2,handler);
 
-'score' in oproxy1;
-'score' in oproxy2;
+console.trace('score' in oproxy1);
+console.trace('score' in oproxy2);
 
 for(let a in  oproxy1){
     console.trace(oproxy1[a]);
@@ -2257,20 +2348,22 @@ for(let b in oproxy2){
     console.trace(oproxy2[b]);
 }
 
+//construct
 var handler = {
     construct (target,args,newTarget){
         return new target(...args);
     }
 };
 
-var obj = new  Proxy(function(){},{
-   construct: function(target,args) {
+var p = new Proxy(function(){},{
+   construct : function(target,args) {
        console.trace('called: '+args.join(','));
-       retrun {value:args[0]*10};
+       return { value:args[0]*10 };
    }
 });
 
-(new p(1)).value
+console.trace((new p(1)).value);
+console.trace((new p(1,2,3,4,5)).value);
 
 var p = new Proxy(function(){},{
     construct:function(target,argumentsList){
@@ -2278,8 +2371,9 @@ var p = new Proxy(function(){},{
     }
 });
 
-p();
+ new  p();
 
+ //deleteProperty
 var handler = {
     deleteProperty(target,key){
         invariant(key,'delete');
@@ -2297,6 +2391,8 @@ var target = {_prop : "foo"};
 var proxy = new Proxy(target,handler);
 delete proxy._prop
 
+
+//defineProperty
 var handler = {
     defineProperty(target,key,descriptor){
         return false;
@@ -2304,9 +2400,11 @@ var handler = {
 };
 
 var target = {};
-var proxy = new proxy(target,handler);
+var proxy = new Proxy(target,handler);
 proxy.foo = 'bar';
+console.trace(proxy.foo);
 
+//getOwnPropertyDescriptor
 var handler={
     getOwnPropertyDescriptor(target,key){
         if(key[0] === '_'){
@@ -2318,10 +2416,11 @@ var handler={
 
 var target = {_foo:'bar',baz:"tar"};
 var proxy = new Proxy(target,handler);
-Object.getOwnPropertyDescriptor(proxy,'wat');
-Object.getOwnPropertyDescriptor(proxy,'_foo');
-Object.getOwnPropertyDescriptor(proxy,'baz');
+console.trace(Object.getOwnPropertyDescriptor(proxy,'wat'));
+console.trace(Object.getOwnPropertyDescriptor(proxy,'_foo'));
+console.trace(Object.getOwnPropertyDescriptor(proxy,'baz'));
 
+//getPrototypeof
 var proto ={};
 var p = new Proxy({},{
     getPrototypeOf(target){
@@ -2329,8 +2428,9 @@ var p = new Proxy({},{
     }
 });
 
-Object.getPrototypeOf(p) === proto;
+console.trace(Object.getPrototypeOf(p) === proto);
 
+//isExtensible
 var p = new Proxy({},{
     isExtensible : function(target){
         console.trace("called");
@@ -2351,6 +2451,7 @@ var p = new Proxy({},{
 
 Object.isExtensible(p);
 
+//ownKey
 let target={
     a:1,
     b:2,
@@ -2358,14 +2459,16 @@ let target={
 };
 
 let handler = {
-    ownKey(target){
+    ownKeys(target){
         return ['a'];
     }
 };
 
 let proxy = new Proxy(target,handler);
 
-Object.keys(proxy);
+console.trace(Object.keys(target));
+console.trace(Object.keys(proxy));
+
 
 let target = {
     _bar: 'foo',
@@ -2391,10 +2494,10 @@ let target = {
     [Symbol.for('secret')]:'4',
 };
 
-Object.defineProperties(target,'key',{
+Object.defineProperty(target,'key',{
     enumerable:false,
     configurable:true,
-    writable;true,
+    writable:true,
     value:'static'
 });
 
@@ -2405,7 +2508,7 @@ let handler = {
 };
 
 let proxy = new Proxy(target,handler);
-Object.keys(proxy)
+console.trace(Object.keys(proxy));
 
 var p = new Proxy({},{
     ownKeys:function(target){
@@ -2413,7 +2516,7 @@ var p = new Proxy({},{
     }
 });
 
-Object.getOwnPropertyNames(p);
+console.trace(Object.getOwnPropertyNames(p));
 
 var obj = {};
 var p = new Proxy(obj,{
@@ -2437,15 +2540,15 @@ var p = new Proxy(obj,{
     }
 });
 
-Object.getOwnPropertyNames(p);
+console.trace(Object.getOwnPropertyNames(p));
 
 var obj = {
-    a : 1;
+    a : 1
 };
 
 Object.preventExtensions(obj);
 
-var p=new proxy(obj,{
+var p=new Proxy(obj,{
     ownKeys :function(target){
         return ['a','b'];
     }
@@ -2453,7 +2556,7 @@ var p=new proxy(obj,{
 
 Object.getOwnPropertyNames(p);
 
-var p = new proy({},{
+var p = new Proxy({},{
     preventExtensions : function (traget) {
         return true;
     }
@@ -2464,12 +2567,12 @@ Object.preventExtensions(p);
 var p = new Proxy({},{
     preventExtensions : function(target){
         console.trace('called');
-        Object.preventExtensions(traget);
+        Object.preventExtensions(target);
         return true;
     }
 });
 
-Object.preventExtensions(p);
+console.trace(Object.preventExtensions(p));
 
 var handler = {
     setPrototypeOf(target,proto){
@@ -2486,7 +2589,7 @@ let target = {};
 let handler = {};
 let {proxy,revoke} = Proxy.revocable(target,handler);
 proxy.foo = 123;
-console.trace(Proxy.foo);
+console.trace(proxy.foo);
 revoke();
 console.trace(proxy.foo);
 
@@ -2503,4 +2606,39 @@ const proxy = new Proxy(target,handler);
 target.m();
 proxy.m();
 
-const_name= new WeakMap();
+const _name= new WeakMap();
+
+class Person {
+    constructor(name){
+        _name.set(this,name);
+    }
+    get name(){
+        return _name.get(this);
+    }
+};
+
+const jane = new Person("Jane");
+console.trace(jane.name);
+
+const proxy = new Proxy(jane,{});
+console.trace(proxy.name);
+
+const target = new Date();
+const handler = {};
+const proxy = new Proxy(target,handler);
+
+proxy.getDate();
+
+const target = new Date("2017-01-01");
+const handler = {
+    get(target,prop){
+        if(prop === 'getDate'){
+            return target.getDate.bind(target);
+        }
+        return Reflect.get(target,prop);
+    }
+}
+
+const proxy  = new Proxy(target,handler);
+
+console.trace(proxy.getDate());
