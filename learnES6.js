@@ -2642,3 +2642,259 @@ const handler = {
 const proxy  = new Proxy(target,handler);
 
 console.trace(proxy.getDate());
+
+try {
+    Object.defineProperty(traget,property,attributes);
+}catch (e) {
+
+}
+
+if(Reflect.defineProperty(target, property, attributes)){
+
+}else{
+
+}
+
+'prop' in target
+
+Reflect.has(target,'prop');
+
+var proxy = new Proxy(target,{
+    set(target,name,value,receiver){
+        var flag = Reflect.set(target,name,value, receiver);
+        if(flag){
+            console.log('set value');
+        }
+        return flag;
+    }
+});
+
+var loggedObj = {
+    get(target,prop){
+        console.log(`get ${prop} `);
+        return Reflect.get(target,prop);
+    },
+    set(target,prop,value,receiver){
+        console.log(`set ${prop} `);
+        return Reflect.set(target,prop,value,receiver);
+    },
+    deleteProperty(target,prop){
+        console.log(`delete ${prop} `);
+        return Reflect.deleteProperty(target,prop)
+    },
+    has(target,prop){
+        console.log(`has ${prop} `);
+        return Reflect.has(target,prop);
+    }
+}
+
+var obj = {
+    a : "a",
+    b : "b"
+};
+
+var  proxy = new Proxy(obj,loggedObj);
+
+proxy.c = "c";
+proxy.a;
+delete proxy.c;
+'a' in proxy;
+console.trace(obj);
+
+var obj = {
+    a : "a",
+    b : "b",
+    c : "c"
+}
+
+console.trace(Reflect.get(obj,'a'));
+console.trace(Reflect.get(obj,'b'));
+console.trace(Reflect.get(obj,'c'));
+
+var obj = {
+    a : "a",
+    b : "b",
+    c : "c",
+    get sayWord(){
+        return console.trace(this.a+this.b+this.c);
+    }
+}
+
+var tempobj = {
+    a : "c",
+    b : "b",
+    c : "a"
+}
+
+Reflect.get(obj,'sayWord',tempobj);
+
+var obj = {
+    foo: 'foo',
+    set setValue(value){
+        this.foo = value;
+        console.trace(this.foo);
+    }
+}
+
+Reflect.set(obj,'setValue','hello world');
+
+var obj = {
+    foo : "foo",
+    set setValue(value){
+        this.foo = value;
+    }
+}
+
+var tempobj = {
+    foo : 'tempfoo'
+}
+
+Reflect.set(obj,'setValue','helloWorld',tempobj);
+
+console.trace(obj.foo);
+console.trace(tempobj.foo);
+
+var handler = {
+    set(target,prop,value,receiver){
+        console.log('set');
+        return Reflect.set(target,prop,value,receiver)
+    },
+    defineProperty(target,prop,attr){
+        console.log('defineProperty');
+        return Reflect.set(target,prop,attr);
+    }
+}
+
+var tempObj = {
+    foo : 'tempfoo'
+}
+
+var proxy = new Proxy(tempObj,handler);
+proxy.foo = 'hello world';
+
+
+var obj = {
+    foo : 'foo'
+}
+
+console.trace('foo' in obj); // ES5
+console.trace(Reflect.has(obj,'foo')); // ES6
+
+var myObj = { foo: 'bar' };
+delete myObj.foo;//ES5
+
+var myObj = { foo: 'bar' };
+Reflect.deleteProperty(myObj, 'foo'); //ES6
+
+function Person(name) {
+    this.name=name;
+    console.trace(this.name);
+}
+
+console.trace(new Person('tom')); //ES5
+console.trace(Reflect.construct(Person,['mac'])); //ES6
+
+function Person(name) {
+    this.name=name;
+    console.trace(this.name);
+}
+
+var person = new Person("tom");
+
+Object.getPrototypeOf(person) === Person.prototype;//ES5
+Reflect.getPrototypeOf(person) === Person.prototype;//ES6
+
+Object.getPrototypeOf(1) // Number {[[PrimitiveValue]]: 0}
+Reflect.getPrototypeOf(1) // 报错
+
+var obj = {foo : 'foo'};
+var tempObj = {tempFoo : "temp"};
+
+Object.setPrototypeOf(obj,tempObj); //ES5
+console.trace(obj);
+
+var obj = {foo : 'foo'};
+var tempObj = {tempFoo : "temp"};
+Reflect.setPrototypeOf(tempObj,obj) //ES6
+console.trace(tempObj);
+
+Object.setPrototypeOf(1,{}); //1
+Reflect.setPrototypeOf(1,{}); //Error
+Object.setPrototypeOf(null,{}); //Error
+Reflect.setPrototypeOf(null,{}); //Error
+
+//ES5
+const ages = [11,22,33,44,55,66,77,88,99,100];
+
+const youngest = Math.min.apply(Math,ages);
+const oldest = Math.max.apply(Math,ages);
+const type = Object.prototype.toString.call(youngest);
+console.trace(`youngest : ${youngest}\r\n oldest : ${oldest} \r\n type : ${type}`);
+
+//ES6
+const ages = [11,22,33,44,55,66,77,88,99,100];
+
+const youngest = Reflect.apply(Math.min,Math,ages);
+const oldest = Reflect.apply(Math.max,Math,ages);
+const type = Reflect.apply(Object.prototype.toString,youngest,[]);
+console.trace(`youngest : ${youngest}\r\n oldest : ${oldest} \r\n type : ${type}`);
+
+//ES5
+var myDate = {};
+
+Object.defineProperty(myDate,'now', {
+    value : () =>  Date.now()
+})
+myDate.now();
+
+//ES6
+var myDate = {};
+
+Reflect.defineProperty(myDate,'now',{
+    value : () =>  Date.now()
+})
+myDate.now();
+
+var target = {}
+Reflect.defineProperty(target,'foo',{
+    value : "hello world",
+    writable : false,
+    configurable : false
+});
+
+var dis0 = Object.getOwnPropertyDescriptor(target,'foo');
+var dis1 = Reflect.getOwnPropertyDescriptor(target,'foo');
+console.trace(dis0);
+console.trace(dis1);
+console.trace(dis0 === dis1);
+
+var obj = {};
+//ES5
+console.trace(Object.isExtensible(obj));
+console.trace(Object.isExtensible(1));
+//ES6
+console.trace(Reflect.isExtensible(obj));
+console.trace(Reflect.isExtensible(1));
+
+
+//ES5
+var obj = {};
+console.trace(Object.isExtensible(obj));
+console.trace(Object.preventExtensions(obj));
+console.trace(Object.isExtensible(obj));
+//ES6
+let obj = {};
+console.trace(Reflect.isExtensible(obj));
+console.trace(Reflect.preventExtensions(obj));
+console.trace(Reflect.isExtensible(obj));
+
+var obj = {
+    foo : 'hello foo',
+    [Symbol.for("foo")]  : 'hello Symbol'
+}
+
+console.trace(Object.getOwnPropertyNames(obj));
+console.trace(Object.getOwnPropertySymbols(obj));
+console.trace(Reflect.ownKeys(obj));
+
+
