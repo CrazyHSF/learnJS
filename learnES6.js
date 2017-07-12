@@ -3039,6 +3039,51 @@ someAsyncThing().then(function(){
     console.log("go on")
 })
 
+p.catch(function(err){
+    console.log("error"+err);
+});
+
+
+var promise = new Promis(function(resolve,reject){
+    try{
+        throw new Error("some errors");
+    }catch(e){
+        reject(e);
+    }
+});
+promise.catch(function(erro){
+    console.log(erro);
+});
+
+var promise = new Promise(function(resolve,reject){
+    reject(new Error("some error"));
+})
+promise.catch(function(e){
+    console.log("error")
+});
+
+getJSON('/post/1.json').then(function(post){
+    return getJSON(post.commentURL);
+}).then(function(comments){
+    console.log("go on");
+}).catch(function(error){
+    console.log("some errors");
+});
+
+var someAsyncThing = function(){
+    return new Promise(function(resolve,reject){
+        resolve(x+2);
+    })
+}
+
+someAsyncThing().then(function(){
+    return someAsyncThing();
+}).catch(function(error){
+    console.log('oh no ',error);
+}).then(function(){
+    console.log("go on")
+})
+
 var promiseArray = [1,2,3,4].map(function(id){
     return getJSON("/post/"+id+".json");
 })
