@@ -3039,3 +3039,122 @@ someAsyncThing().then(function(){
     console.log("go on")
 })
 
+var promises = [1,2,3,4,5,6,7].map(function(id){
+    return getJSON("/post/"+id+".json");
+})
+Promise.all(promises).then(function(){
+    console.log("ok!");
+}).catch(function(){
+    console.log("error");
+})
+
+const p1 = new Promise((resolve,reject)=>{
+    resolve('hello');
+})
+.then(result => result)
+.catch(e=>e);
+
+const p2 = new Promise((resolve,reject)=>{
+    throw new Error('error');
+})
+.then(result=>result)
+.catch(e=>e);
+
+Promise.all([p1,p2])
+.then(result => console.trace(result))
+.catch(e => console.trace(e));
+
+const p =Promise.race([
+    fetch('/resourse-that-may-take-a-while'),
+    new Promise(function(resolve,reject){
+        setTimeout(()=>reject(new Error("error")),500)
+    })
+]);
+
+p.then(response => console.log(response));
+p.catch(error => console.log(error));
+
+var jsPromise = new Promise($.ajax('/whatever.json'))
+
+let  thenable =  {
+    then : function(resolve,reject){
+        resolve(42)
+    }
+};
+
+let p1 = Promise.resolve(thenable);
+p1.then(function(value){
+    console.log(value);
+});
+
+let p2 = Promise.reject("出错了");
+
+var p = new Promise((resolve,reject) => reject('出错了'));
+p.then(null,function(e){
+    console.log(e);
+})
+
+const thenable = {
+    then(resolve,reject){
+        reject('出错了');
+    }
+};
+
+Promise.reject(thenable)
+    .catch(e => {
+        console.log(e === thenable);
+    })
+
+const preloadImage = function(path){
+    return new Promise(function(resolve,reject){
+        var image = new Image();
+        image.onload = resolve;
+        image.onerror = reject;
+        image.src = path;
+    })
+}
+
+function getfoo(){
+    return new Promise(function(resolve,reject){
+        resolve('foo');
+    });
+}
+
+var g = function* (){
+    try{
+        var foo = yield getfoo();
+    }catch(e){
+        console.trace(e)
+    }
+};
+
+function run (generator){
+    var it = generator();
+
+    function go(result){
+        if(result.done) {
+            return result.value;
+        }
+        return result.then(function(value){
+            return go(it.next(value));
+        },function(error){
+            return go(it.throw(error));
+        });
+    }
+
+    go(it.next);
+}
+
+run(go);
+
+const f = () => console.log('now');
+(
+    () => new Promise(
+        resolve => resolve(f())
+    )
+)();
+console.log('next');
+
+const f = () => console.log('now');
+Promise.try(f);
+console.log('next');
