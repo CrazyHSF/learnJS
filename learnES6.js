@@ -3265,6 +3265,49 @@ class RangeIterator {
         console.trace(value);
     }
 
+
+
+
+var  array = [1,2,3,4,5,6];
+
+var it = array[Symbol.iterator]();
+
+console.trace(it.next());
+console.trace(it.next());
+console.trace(it.next());
+console.trace(it.next());
+console.trace(it.next());
+
+class RangeIterator {
+    consttuctor(start, stop) {
+        this.start = start;
+        this.stop = stop;
+    }
+
+
+    [Symbol.iterator]() {
+        return this;
+    }
+
+    next() {
+        var value = this.value;
+        if (value < stop) {
+            this.value++
+            return {value: value, done: false}
+        } else {
+            return {value: value, done: true}
+        }
+    }
+}
+
+    function range(start,stop){
+        return new RangeIterator(start,stop);
+    }
+
+    for(var value of range(0,4)){
+        console.trace(value);
+    }
+
 var iterator = makeIterator([1,2,3]);
 
 function makeIterator(array){
