@@ -3424,3 +3424,25 @@ two.next = three;
 for (var i of one){
     console.log(i); // 1, 2, 3
 }
+
+let obj ={
+    data :['hello','world'],
+    [Symbol.iterator](){
+        const self = this;
+        let index = 0;
+        return {
+            next(){
+                if(index<self.data.length){
+                    return {
+                        value:self.data[index++],
+                        done:false
+                    };
+                } else {
+                    return {value:undefined,done:false};
+                }
+            }
+        }
+    }
+}
+
+
